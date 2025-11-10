@@ -1,0 +1,17 @@
+# EU5 Standalone Strategy Agent - Minimal Dependencies
+# Python 3.11+ required
+
+# Core dependencies
+openai>=1.0.0              # OpenAI API client
+pydantic>=2.0.0            # Data validation
+
+# CLI and formatting
+rich>=13.0.0               # Beautiful terminal formatting
+
+# Web search (fallback)
+googlesearch-python>=1.2.3 # Simple Google search
+requests>=2.31.0           # HTTP requests
+beautifulsoup4>=4.12.0     # HTML parsing (for detailed search)
+
+# Optional: Environment variable management
+python-dotenv>=1.0.0       # Load .env files

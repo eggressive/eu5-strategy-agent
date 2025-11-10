@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eu5-strategy-agent"
+version = "1.0.0"
+description = "Lightweight EU5 strategy advisor using GPT-5-mini with comprehensive knowledge base integration"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "EU5 Strategy Agent Contributors"}
+]
+keywords = ["eu5", "europa-universalis", "strategy", "ai", "assistant", "gpt", "openai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Games/Entertainment",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "rich>=13.0.0",
+    "googlesearch-python>=1.2.3",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[project.scripts]
+eu5-agent = "eu5_agent.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/eu5-strategy-agent"
+Documentation = "https://github.com/yourusername/eu5-strategy-agent/tree/main/docs"
+Repository = "https://github.com/yourusername/eu5-strategy-agent"
+Issues = "https://github.com/yourusername/eu5-strategy-agent/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["eu5_agent*"]
+exclude = ["tests*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
