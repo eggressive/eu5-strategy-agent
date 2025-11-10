@@ -15,7 +15,7 @@ def test_api_key():
     config = {
         "model": "gpt-5-mini",
         "base_url": "https://api.openai.com/v1",
-        "api_key": "YOUR_OPENAI_API_KEY_HERE",
+        "api_key": "YOUR_OPENAI_API_KEY",
         "max_tokens": 8192,
         "temperature": 0.0
     }
