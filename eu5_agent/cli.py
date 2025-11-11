@@ -188,6 +188,10 @@ Environment Variables:
 
     args = parser.parse_args()
 
+    # Load .env file first (before checking API key)
+    from eu5_agent.config import load_dotenv_if_present
+    load_dotenv_if_present()
+
     # Check for API key
     if not os.getenv("OPENAI_API_KEY"):
         console.print("[bold red]Error:[/bold red] OPENAI_API_KEY environment variable not set!")
