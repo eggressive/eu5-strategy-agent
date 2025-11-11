@@ -16,6 +16,7 @@ from rich.prompt import Prompt
 from rich import print as rprint
 
 from .agent import EU5Agent
+from .config import load_dotenv_if_present
 
 
 console = Console()
@@ -188,8 +189,11 @@ Environment Variables:
 
     args = parser.parse_args()
 
-    # Load .env file first (before checking API key)
-    from eu5_agent.config import load_dotenv_if_present
+    # Load .env file early to enable API key validation below
+    # Note: This will be called again in EU5Config.__init__(), but that's
+    # intentional - we need the .env loaded BEFORE we check for the API key,
+    # otherwise users with valid .env files would see an error. The function
+    # is idempotent (safe to call multiple times).
     load_dotenv_if_present()
 
     # Check for API key
