@@ -49,9 +49,11 @@ class EU5Config:
         self.base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 
         # Knowledge Base Configuration
+        # Default to repository's knowledge directory if not specified
+        default_kb_path = str(Path(__file__).parent.parent / "knowledge")
         self.knowledge_path = os.getenv(
             "EU5_KNOWLEDGE_PATH",
-            "/home/dimitar/ai/eu5_agent"
+            default_kb_path
         )
 
         # Model-specific settings

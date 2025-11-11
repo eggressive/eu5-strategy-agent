@@ -25,25 +25,25 @@ class EU5Knowledge:
     KNOWLEDGE_MAP: Dict[str, Dict[str, str]] = {
         "mechanics": {
             # Core game mechanics covering all 8 main panels
-            "economy": "economy_mechanics.md",          # Economy panel
-            "government": "government_mechanics.md",    # Government panel
-            "production": "production_mechanics.md",    # Production panel
-            "society": "society_mechanics.md",          # Society panel (estates)
-            "diplomacy": "diplomacy_mechanics.md",      # Diplomacy panel
-            "military": "military_mechanics.md",        # Military panel (units/armies)
-            "warfare": "warfare_mechanics.md",          # Military panel (warfare)
-            "geopolitics": "geopolitics_mechanics.md",  # Geopolitics panel
-            "advances": "advances_mechanics.md",        # Advances panel
+            "economy": "mechanics/economy_mechanics.md",          # Economy panel
+            "government": "mechanics/government_mechanics.md",    # Government panel
+            "production": "mechanics/production_mechanics.md",    # Production panel
+            "society": "mechanics/society_mechanics.md",          # Society panel (estates)
+            "diplomacy": "mechanics/diplomacy_mechanics.md",      # Diplomacy panel
+            "military": "mechanics/military_mechanics.md",        # Military panel (units/armies)
+            "warfare": "mechanics/warfare_mechanics.md",          # Military panel (warfare)
+            "geopolitics": "mechanics/geopolitics_mechanics.md",  # Geopolitics panel
+            "advances": "mechanics/advances_mechanics.md",        # Advances panel
         },
         "strategy": {
-            "beginner_route": "beginner_route.md",
-            "common_mistakes": "common_mistakes.md",
+            "beginner_route": "strategy/beginner_route.md",
+            "common_mistakes": "strategy/common_mistakes.md",
         },
         "nations": {
-            "england": "nation_england.md",
+            "england": "nations/nation_england.md",
         },
         "resources": {
-            "all": "eu5_resources.md",
+            "all": "resources/eu5_resources.md",
         }
     }
 
@@ -53,13 +53,22 @@ class EU5Knowledge:
 
         Args:
             knowledge_path: Path to knowledge base directory.
-                           Defaults to /home/dimitar/ai/eu5_agent
+                           Defaults to the 'knowledge' directory in the repository.
         """
         if knowledge_path is None:
+            # Try environment variable first, then use repository's knowledge directory
             knowledge_path = os.getenv(
                 "EU5_KNOWLEDGE_PATH",
-                "/home/dimitar/ai/eu5_agent"
+                None
             )
+
+            if knowledge_path is None:
+                # Default to repository's knowledge directory
+                # Path(__file__) = .../eu5_agent/knowledge.py
+                # .parent.parent = repository root
+                # / "knowledge" = knowledge directory
+                repo_root = Path(__file__).parent.parent
+                knowledge_path = str(repo_root / "knowledge")
 
         self.knowledge_path = Path(knowledge_path)
 
