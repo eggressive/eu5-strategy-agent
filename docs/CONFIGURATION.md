@@ -192,6 +192,269 @@ OPENAI_MODEL=gpt-5 python run_eu5_standalone.py --query "How do estates work?"
 OPENAI_MODEL=gpt-4o python run_eu5_standalone.py --query "How do estates work?"
 ```
 
+## Alternative LLM Providers
+
+The agent supports **OpenAI-compatible API providers**, allowing you to use free or
+cheaper alternatives by changing `OPENAI_BASE_URL` and `OPENAI_API_KEY`.
+
+### Requirements
+
+All providers must support:
+
+- **OpenAI Chat Completions API** format
+- **Function calling** (for knowledge base + web search tools)
+
+Most modern LLMs meet these requirements through OpenAI-compatible endpoints.
+
+### Groq (FREE - 14,400 requests/day)
+
+**Best for:** Free usage, ultra-fast inference
+
+**Setup:**
+
+```bash
+# .env file
+OPENAI_API_KEY=gsk_your_groq_api_key_here
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+OPENAI_MODEL=llama-3.1-8b-instant
+```
+
+**Get API Key:** https://console.groq.com/
+
+**Available Models:**
+
+- `llama-3.1-8b-instant` - Fast, good quality
+- `llama-3.1-70b-versatile` - Best quality
+- `mixtral-8x7b-32768` - Large context window
+- `gemma2-9b-it` - Google's Gemma model
+
+**Free Tier:** 14,400 requests/day, 30 requests/minute
+
+**Pros:**
+
+- ✅ Completely free
+- ✅ Ultra-fast (LPU hardware)
+- ✅ Reliable function calling
+
+**Cons:**
+
+- ⚠️ Rate limits
+- ⚠️ Smaller models than GPT-4
+
+### Google AI Studio (FREE - 1M tokens/minute)
+
+**Best for:** Massive free tier, Google's latest models
+
+**Setup:**
+
+```bash
+# .env file
+OPENAI_API_KEY=your_google_api_key_here
+OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+OPENAI_MODEL=gemini-2.5-flash
+```
+
+**Get API Key:** https://aistudio.google.com/apikey
+
+**Available Models:**
+
+- `gemini-2.5-flash` - Fast, excellent quality
+- `gemini-1.5-pro` - Highest quality
+- `gemini-1.5-flash` - Previous generation
+
+**Free Tier:** 1M tokens per minute (extremely generous)
+
+**Pros:**
+
+- ✅ Massive free tier
+- ✅ Latest Gemini models
+- ✅ Excellent quality
+
+**Cons:**
+
+- ⚠️ Newer provider, less battle-tested
+
+### OpenRouter (FREE models + paid access to 300+)
+
+**Best for:** Model variety, accessing multiple providers
+
+**Setup:**
+
+```bash
+# .env file
+OPENAI_API_KEY=sk-or-v1-your_openrouter_key_here
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+OPENAI_MODEL=meta-llama/llama-3.3-70b-instruct
+```
+
+**Get API Key:** https://openrouter.ai/keys
+
+**Free Models:**
+
+- `meta-llama/llama-3.3-70b-instruct` - Excellent quality, completely free
+- `google/gemini-2.0-flash-exp:free` - Google's latest
+- `mistralai/mistral-7b-instruct:free` - Fast, lightweight
+
+**Paid Access:**
+
+- GPT-4, Claude, Gemini Pro, and 300+ other models
+- Pay-per-use pricing
+
+**Pros:**
+
+- ✅ Access to many providers
+- ✅ Some completely free models
+- ✅ Fallback/routing options
+
+**Cons:**
+
+- ⚠️ Free models have rate limits
+- ⚠️ Quality varies by model
+
+### Together.ai (Free $25 trial)
+
+**Best for:** Cost-effective paid option
+
+**Setup:**
+
+```bash
+# .env file
+OPENAI_API_KEY=your_together_api_key_here
+OPENAI_BASE_URL=https://api.together.xyz/v1
+OPENAI_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+```
+
+**Get API Key:** https://api.together.ai/settings/api-keys
+
+**Popular Models:**
+
+- `meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo` - Fast, cheap
+- `meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo` - High quality
+- `mistralai/Mixtral-8x7B-Instruct-v0.1` - Great balance
+
+**Pricing:** ~$0.20-0.60 per 1M tokens (cheaper than OpenAI)
+
+**Pros:**
+
+- ✅ Free $25 trial
+- ✅ Cheaper than OpenAI
+- ✅ Many model options
+
+**Cons:**
+
+- ⚠️ Requires payment after trial
+
+### DeepInfra (Free tier available)
+
+**Best for:** Open-source models
+
+**Setup:**
+
+```bash
+# .env file
+OPENAI_API_KEY=your_deepinfra_api_key_here
+OPENAI_BASE_URL=https://api.deepinfra.com/v1/openai
+OPENAI_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
+```
+
+**Get API Key:** https://deepinfra.com/dash/api_keys
+
+**Available Models:**
+
+- Many Llama, Mistral, Qwen models
+- Free tier available
+
+**Pros:**
+
+- ✅ Free tier
+- ✅ Many open models
+
+**Cons:**
+
+- ⚠️ Documentation less comprehensive
+
+### Provider Cost Comparison
+
+| Provider | Best Model | Cost (1M tokens) | Free Tier | Speed |
+|----------|-----------|------------------|-----------|-------|
+| OpenAI | gpt-5-mini | $0.10-0.40 | No | Fast |
+| OpenAI | gpt-4o-mini | $0.15-0.60 | No | Fast |
+| Groq | llama-3.1-70b | FREE | 14.4K req/day | Ultra-fast |
+| Google AI | gemini-2.5-flash | FREE | 1M TPM | Fast |
+| OpenRouter | llama-3.3-70b | FREE | Yes | Medium |
+| Together.ai | llama-3.1-70b | $0.88 | $25 trial | Fast |
+
+### Testing Alternative Providers
+
+After configuring an alternative provider, test it:
+
+```bash
+# Test with verbose output
+python run_agent.py --query "How do estates work?" --verbose
+
+# Test function calling
+python run_agent.py --query "What are common beginner mistakes?"
+
+# Check response quality
+python run_agent.py --query "Explain the market system in EU5"
+```
+
+### Function Calling Compatibility
+
+All providers listed above support OpenAI-style function calling, but quality
+varies:
+
+**Excellent:**
+
+- OpenAI (GPT-4, GPT-5)
+- Google AI Studio (Gemini 2.5)
+- Groq (Llama 3.1 70B)
+
+**Good:**
+
+- OpenRouter (depends on model)
+- Together.ai (Llama 3.1)
+
+**Test before production** - try a few queries with each provider to verify
+function calling works reliably.
+
+### Switching Between Providers
+
+You can easily switch providers by changing environment variables:
+
+```bash
+# Use OpenAI
+export OPENAI_API_KEY=sk-proj-...
+export OPENAI_BASE_URL=https://api.openai.com/v1
+export OPENAI_MODEL=gpt-5-mini
+
+# Switch to Groq (free)
+export OPENAI_API_KEY=gsk_...
+export OPENAI_BASE_URL=https://api.groq.com/openai/v1
+export OPENAI_MODEL=llama-3.1-70b-versatile
+
+# Switch to Google AI Studio (free)
+export OPENAI_API_KEY=AIza...
+export OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+export OPENAI_MODEL=gemini-2.5-flash
+```
+
+Or create multiple `.env` files:
+
+```bash
+# .env.openai
+OPENAI_API_KEY=sk-proj-...
+OPENAI_MODEL=gpt-5-mini
+
+# .env.groq
+OPENAI_API_KEY=gsk_...
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+OPENAI_MODEL=llama-3.1-70b-versatile
+
+# Use specific config
+cp .env.groq .env && python run_agent.py
+```
+
 ## Troubleshooting
 
 ### Error: "OPENAI_API_KEY not set"

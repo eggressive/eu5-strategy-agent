@@ -1,71 +1,140 @@
 # EU5 Strategy Agent
 
-**Lightweight, standalone strategy advisor for Europa Universalis 5 (1337-1837)**
+## Lightweight, standalone strategy advisor for Europa Universalis 5
 
-Get expert strategic guidance for EU5 using GPT-5-mini with a comprehensive knowledge base covering all 8 main game panels.
+Get expert strategic guidance for EU5 using GPT-5-mini with a comprehensive
+knowledge base covering all 8 main game panels.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 ## Features
 
-- 🤖 **GPT-5-mini Powered** - Fast, cost-effective AI-driven strategy advice
-- 📚 **Comprehensive Knowledge Base** - 13 curated files covering all 8 EU5 game panels
-- 🌐 **Web Search Fallback** - Automatically searches for missing content (prioritizes eu5.paradoxwikis.com)
-- 💻 **Beautiful CLI** - Rich terminal formatting with markdown rendering
-- ⚙️ **Flexible Configuration** - Environment variables, .env files, or direct parameters
-- 🚀 **Fast Responses** - 2-3 second response times
-- 💰 **Cost-Effective** - Optimized for gpt-5-mini's pricing
+- **GPT-5-mini Powered** - Fast, cost-effective AI-driven strategy advice
+- **Comprehensive Knowledge Base** - 13 curated files covering all 8 EU5
+  game panels
+- **Web Search Fallback** - Automatically searches for missing content
+  (prioritizes eu5.paradoxwikis.com)
+- **Beautiful CLI** - Rich terminal formatting with markdown rendering
+- **Flexible Configuration** - Environment variables, .env files, or direct parameters
+- **Fast Responses** - 2-3 second response times
 
 ## Quick Start
 
 ### Installation
 
 **From Source:**
+
 ```bash
-git clone https://github.com/yourusername/eu5-strategy-agent
+git clone https://github.com/eggressive/eu5-strategy-agent.git
 cd eu5-strategy-agent
 pip install -r requirements.txt
-```
-
-**Future PyPI Installation:**
-```bash
-pip install eu5-strategy-agent
 ```
 
 ### Configuration
 
 1. **Copy the example configuration:**
+
    ```bash
    cp .env.example .env
    ```
 
-2. **Edit `.env` and add your OpenAI API key:**
+2. **Edit `.env` and add your API key:**
+
    ```bash
-   OPENAI_API_KEY=your-openai-api-key-here
+   OPENAI_API_KEY=your-api-key-here
    OPENAI_MODEL=gpt-5-mini
    ```
 
-3. **Get an OpenAI API key** from [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+3. **Get an API key** from [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+
+### Important Notes for gpt-5-mini
+
+- Does NOT support `temperature` parameter (uses default=1.0)
+- Uses `max_completion_tokens` instead of `max_tokens`
+- The agent handles these differences automatically
+
+### Supported Models
+
+The agent works with **OpenAI models** and **OpenAI-compatible providers**:
+
+#### OpenAI Models
+
+| Model | Best For | Cost (per 1M tokens) | Speed |
+|-------|----------|---------------------|-------|
+| `gpt-5-mini` | Default choice | ~$0.10-0.40 | Fast |
+| `gpt-4o-mini` | Best value | $0.15-0.60 | Fast |
+| `gpt-4o` | Highest quality | $2.50-10.00 | Medium |
+| `gpt-4-turbo` | Previous gen | $10-30 | Medium |
+| `gpt-3.5-turbo` | Budget option | $0.50-1.50 | Very fast |
+
+Simply change `OPENAI_MODEL` in your `.env` file.
+
+#### Free & Cheap Alternatives
+
+Use **free OpenAI-compatible providers** by changing `OPENAI_BASE_URL`:
+
+**Groq (14,400 free requests/day, ultra-fast):**
+
+```bash
+OPENAI_API_KEY=your-groq-api-key
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+OPENAI_MODEL=llama-3.1-8b-instant
+```
+
+**Google AI Studio (1M free tokens/minute):**
+
+```bash
+OPENAI_API_KEY=your-google-api-key
+OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+OPENAI_MODEL=gemini-2.5-flash
+```
+
+**OpenRouter (300+ models, some free):**
+
+```bash
+OPENAI_API_KEY=your-openrouter-api-key
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+OPENAI_MODEL=meta-llama/llama-3.3-70b-instruct
+```
+
+#### Provider Comparison
+
+| Provider | Best For | Free Tier | Get API Key |
+|----------|----------|-----------|-------------|
+| OpenAI | Quality, reliability | No | [platform.openai.com](https://platform.openai.com/api-keys) |
+| Groq | Speed, free usage | 14.4K req/day | [console.groq.com](https://console.groq.com/) |
+| Google AI Studio | Free tokens | 1M tokens/min | [aistudio.google.com](https://aistudio.google.com/apikey) |
+| OpenRouter | Model variety | Select models | [openrouter.ai/keys](https://openrouter.ai/keys) |
+| Together.ai | Cost-effective | $25 trial | [api.together.ai](https://api.together.ai/settings/api-keys) |
+
+**Requirements:** All providers must support function calling (most modern
+models do).
+
+See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed setup instructions.
 
 ### Usage
 
 **Interactive Mode:**
+
 ```bash
 python run_agent.py
 ```
 
 **Single Query:**
+
 ```bash
 python run_agent.py --query "How do estates work in EU5?"
 ```
 
 **With Verbose Output:**
+
 ```bash
 python run_agent.py --query "What are the best opening moves for England?" --verbose
 ```
 
 **Programmatic Use:**
+
 ```python
 from eu5_agent import EU5Agent
 
@@ -78,7 +147,8 @@ print(response)
 
 The agent includes comprehensive knowledge covering:
 
-### Mechanics (9 files - All 8 Game Panels)
+### Mechanics (All 8 Game Panels)
+
 - **Economy** - Trade, markets, taxation, income
 - **Government** - Laws, institutions, cabinets, reforms
 - **Production** - Buildings, goods, development
@@ -90,13 +160,16 @@ The agent includes comprehensive knowledge covering:
 - **Advances** - Technology, ideas, innovations
 
 ### Strategy Guides
+
 - **Beginner Route** - Learning path for new players
 - **Common Mistakes** - Pitfalls to avoid
 
 ### Nation Guides
+
 - **England** - Opening strategy with 50-year checklist
 
 ### Resources
+
 - **External Wikis** - Community resources and links
 
 ## Example Queries
@@ -115,21 +188,15 @@ python run_agent.py --query "What are the best opening moves for England?"
 python run_agent.py --query "What are common beginner mistakes to avoid?"
 ```
 
-## Configuration
+## Advanced Configuration
 
 The agent supports three configuration methods:
 
-1. **Environment Variables** (Recommended for production)
+1. **Environment Variables**
 2. **.env File** (Recommended for development)
 3. **Direct Parameters** (Programmatic use)
 
 See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for complete configuration guide.
-
-### Important Notes for gpt-5-mini
-
-- Does NOT support `temperature` parameter (uses default=1.0)
-- Uses `max_completion_tokens` instead of `max_tokens`
-- The agent handles these differences automatically
 
 ## Requirements
 
@@ -147,8 +214,6 @@ See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for complete configuration gu
 ## Documentation
 
 - **[Configuration Guide](docs/CONFIGURATION.md)** - Complete configuration reference
-- **[EU5 README](docs/EU5_README.md)** - EU5-specific documentation
-- **[Cleanup Summary](docs/CLEANUP_SUMMARY.md)** - Development history
 
 ## Architecture
 
@@ -160,30 +225,32 @@ This is a **standalone agent** independent of any framework:
 - **Fast Startup** - < 1 second initialization
 
 The agent uses:
+
 1. **Local knowledge base** (primary) - Direct markdown file loading
-2. **Web search** (fallback) - Google search prioritizing eu5.paradoxwikis.com
+2. **Web search** (fallback) - Google search prioritizing
+   eu5.paradoxwikis.com
 3. **GPT-5-mini** - OpenAI's latest efficient model
 
 ## Testing
 
 Run the test suite:
+
 ```bash
 python tests/test_agent.py
 ```
 
 Test your API key and model:
+
 ```bash
 python tests/test_openai_api.py
 ```
 
 ## Contributing
 
-Contributions are welcome! Areas for contribution:
+Contributions are welcome! See [TODO.md](TODO.md) for a complete list of planned
+enhancements and areas where contributions are needed.
 
-- **Knowledge Base** - Add more nation guides, strategies
-- **Features** - New tools, better search, caching
-- **Documentation** - Tutorials, examples, translations
-- **Testing** - Unit tests, integration tests
+Pull requests, issue reports, and feedback are all appreciated.
 
 ## License
 
@@ -197,13 +264,11 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/eu5-strategy-agent/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/eu5-strategy-agent/discussions)
-
-## Related Projects
-
-- **OpenManus** - Full autonomous agent framework (if you need browser automation and complex workflows)
+- **Issues**:
+  [GitHub Issues](https://github.com/yourusername/eu5-strategy-agent/issues)
+- **Discussions**:
+  [GitHub Discussions](https://github.com/yourusername/eu5-strategy-agent/discussions)
 
 ---
 
-**Made with ❤️ for the EU5 community**
+Made with ❤️ for the EU5 community

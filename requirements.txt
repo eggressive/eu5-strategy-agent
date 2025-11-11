@@ -13,5 +13,4 @@ googlesearch-python>=1.2.3 # Simple Google search
 requests>=2.31.0           # HTTP requests
 beautifulsoup4>=4.12.0     # HTML parsing (for detailed search)
 
-# Optional: Environment variable management
 python-dotenv>=1.0.0       # Load .env files
