@@ -47,10 +47,10 @@ dev = [
 eu5-agent = "eu5_agent.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/eu5-strategy-agent"
-Documentation = "https://github.com/yourusername/eu5-strategy-agent/tree/main/docs"
-Repository = "https://github.com/yourusername/eu5-strategy-agent"
-Issues = "https://github.com/yourusername/eu5-strategy-agent/issues"
+Homepage = "https://github.com/eggressive/eu5-strategy-agent"
+Documentation = "https://github.com/eggressive/eu5-strategy-agent/tree/main/docs"
+Repository = "https://github.com/eggressive/eu5-strategy-agent"
+Issues = "https://github.com/eggressive/eu5-strategy-agent/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
