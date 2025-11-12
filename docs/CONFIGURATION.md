@@ -21,9 +21,35 @@ That's it! The agent will automatically load your configuration from the `.env` 
 
 ## Three Configuration Methods
 
-The agent supports three ways to configure settings, in **priority order**:
+The agent supports three ways to configure settings:
 
-### 1. Direct Parameters (Highest Priority)
+### 1. Environment Variables
+
+Set environment variables in your shell:
+
+```bash
+export OPENAI_API_KEY='sk-proj-your-key-here'
+export OPENAI_MODEL='gpt-5-mini'
+export EU5_KNOWLEDGE_PATH='/path/to/eu5_agent'
+
+python run_eu5_standalone.py
+```
+
+### 2. .env File
+
+Create a `.env` file in the `openmanus/` directory:
+
+```bash
+OPENAI_API_KEY=sk-proj-your-key-here
+OPENAI_MODEL=gpt-5-mini
+EU5_KNOWLEDGE_PATH=/path/to/eu5_agent
+```
+
+The agent automatically loads this file if `python-dotenv` is installed.
+
+**Use when:** Local development, testing, or personal use.
+
+### 3. Direct Parameters
 
 When creating an agent programmatically:
 
@@ -39,34 +65,6 @@ agent = EU5Agent(
 
 **Use when:** Writing custom scripts or integrating with other tools.
 
-### 2. Environment Variables (Medium Priority)
-
-Set environment variables in your shell:
-
-```bash
-export OPENAI_API_KEY='sk-proj-your-key-here'
-export OPENAI_MODEL='gpt-5-mini'
-export EU5_KNOWLEDGE_PATH='/home/dimitar/ai/eu5_agent'
-
-python run_eu5_standalone.py
-```
-
-**Use when:** Running in production, Docker containers, or CI/CD pipelines.
-
-### 3. .env File (Lowest Priority, but Recommended for Dev)
-
-Create a `.env` file in the `openmanus/` directory:
-
-```bash
-OPENAI_API_KEY=sk-proj-your-key-here
-OPENAI_MODEL=gpt-5-mini
-EU5_KNOWLEDGE_PATH=/home/dimitar/ai/eu5_agent
-```
-
-The agent automatically loads this file if `python-dotenv` is installed.
-
-**Use when:** Local development, testing, or personal use.
-
 ## All Configuration Options
 
 | Variable | Required | Default | Description |
@@ -74,7 +72,7 @@ The agent automatically loads this file if `python-dotenv` is installed.
 | `OPENAI_API_KEY` | **Yes** | None | Your OpenAI API key |
 | `OPENAI_MODEL` | No | `gpt-5-mini` | Model to use |
 | `OPENAI_BASE_URL` | No | `https://api.openai.com/v1` | API endpoint |
-| `EU5_KNOWLEDGE_PATH` | No | `/home/dimitar/ai/eu5_agent` | Knowledge base path |
+| `EU5_KNOWLEDGE_PATH` | No | Repository's `knowledge/` directory | Knowledge base path |
 
 ### Getting an OpenAI API Key
 
@@ -95,9 +93,10 @@ OPENAI_MODEL=gpt-5-mini
 ```
 
 **Characteristics:**
-- ✅ Fast (2-3 second responses)
-- ✅ Cost-effective
-- ✅ Good quality for strategy advice
+
+- Fast (2-3 second responses)
+- Cost-effective
+- Good quality for strategy advice
 - ⚠️ Does NOT support `temperature` parameter
 - ⚠️ Uses `max_completion_tokens` (not `max_tokens`)
 
@@ -114,10 +113,11 @@ OPENAI_MODEL=gpt-5
 ```
 
 **Characteristics:**
-- ✅ Higher quality responses
-- ✅ Better at complex strategic reasoning
-- ✅ More detailed analysis
-- ✗ More expensive (3-5x cost)
+
+- Higher quality responses
+- Better at complex strategic reasoning
+- More detailed analysis
+- ⚠️ More expensive (3-5x cost)
 - Same parameter constraints as gpt-5-mini
 
 ### gpt-4o / gpt-4-turbo
@@ -131,8 +131,9 @@ OPENAI_MODEL=gpt-4-turbo
 ```
 
 **Characteristics:**
-- ✅ Previous generation, still good quality
-- ✅ Supports all standard OpenAI parameters
+
+- Previous generation, still good quality
+- Supports all standard OpenAI parameters
 - ⚠️ May be slower than gpt-5 models
 - ⚠️ More expensive than gpt-5-mini
 
@@ -147,10 +148,10 @@ OPENAI_MODEL=gpt-5-mini
 EU5_KNOWLEDGE_PATH=/home/user/eu5_agent
 ```
 
-### Example 2: Production Server
+### Example 2: Environment Variables
 
 ```bash
-# In your deployment script or systemd service
+# In your shell, deployment script or systemd service
 export OPENAI_API_KEY='sk-proj-xyz789...'
 export OPENAI_MODEL='gpt-5-mini'
 export EU5_KNOWLEDGE_PATH='/opt/eu5_agent'
@@ -232,9 +233,9 @@ OPENAI_MODEL=llama-3.1-8b-instant
 
 **Pros:**
 
-- ✅ Completely free
-- ✅ Ultra-fast (LPU hardware)
-- ✅ Reliable function calling
+- Completely free
+- Ultra-fast (LPU hardware)
+- Reliable function calling
 
 **Cons:**
 
@@ -266,9 +267,9 @@ OPENAI_MODEL=gemini-2.5-flash
 
 **Pros:**
 
-- ✅ Massive free tier
-- ✅ Latest Gemini models
-- ✅ Excellent quality
+- Massive free tier
+- Latest Gemini models
+- Excellent quality
 
 **Cons:**
 
@@ -302,9 +303,9 @@ OPENAI_MODEL=meta-llama/llama-3.3-70b-instruct
 
 **Pros:**
 
-- ✅ Access to many providers
-- ✅ Some completely free models
-- ✅ Fallback/routing options
+- Access to many providers
+- Some completely free models
+- Fallback/routing options
 
 **Cons:**
 
@@ -336,9 +337,9 @@ OPENAI_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
 
 **Pros:**
 
-- ✅ Free $25 trial
-- ✅ Cheaper than OpenAI
-- ✅ Many model options
+- Free $25 trial
+- Cheaper than OpenAI
+- Many model options
 
 **Cons:**
 
@@ -366,8 +367,8 @@ OPENAI_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
 
 **Pros:**
 
-- ✅ Free tier
-- ✅ Many open models
+- Free tier
+- Many open models
 
 **Cons:**
 
@@ -415,7 +416,7 @@ varies:
 - OpenRouter (depends on model)
 - Together.ai (Llama 3.1)
 
-**Test before production** - try a few queries with each provider to verify
+**Test before use** - try a few queries with each provider to verify
 function calling works reliably.
 
 ### Switching Between Providers
@@ -455,6 +456,125 @@ OPENAI_MODEL=llama-3.1-70b-versatile
 cp .env.groq .env && python run_agent.py
 ```
 
+## Web Search Configuration (Optional)
+
+The agent can use **Tavily API** for web search when the local knowledge
+base doesn't have the information needed. This is **completely optional** -
+the agent works perfectly with just the 13 knowledge base files included in
+the repository.
+
+### Why Tavily?
+
+Tavily is an AI-optimized search API specifically designed for LLM agents:
+
+- **AI-Optimized Results** - Returns clean text, no HTML parsing needed
+- **Domain Filtering** - Prioritizes `eu5.paradoxwikis.com` automatically
+- **No Rate Limiting** - Official API, no scraping blocks
+- **Fast** - Single API call vs. multiple HTTP requests
+- **Free Tier** - 1000 searches per month (generous for most users)
+
+**Previous Implementation:** Used `googlesearch-python` which was rate-limited
+and unreliable. Replaced with Tavily in this version.
+
+### Setup (Optional)
+
+**1. Get FREE Tavily API Key:**
+
+Visit: [tavily.com](https://tavily.com/)
+
+- Sign up for free account
+- Get API key from dashboard
+- Free tier: 1000 searches/month
+
+**2. Add to `.env` file:**
+
+```bash
+# Web Search (Optional)
+TAVILY_API_KEY=tvly-your-api-key-here
+```
+
+**3. Test web search:**
+
+```bash
+# Query for content not in knowledge base
+python run_agent.py --query "What's France's opening strategy?" --verbose
+
+# Should see web_search tool calls returning wiki results
+```
+
+### How It Works
+
+When you query about content not in the local knowledge base:
+
+**Without Tavily:**
+```
+User: "What's France's opening strategy?"
+Agent: → query_knowledge(nations)
+       → No France guide found
+       → web_search returns "No results"
+       → Synthesizes response from general mechanics knowledge
+```
+
+**With Tavily:**
+```
+User: "What's France's opening strategy?"
+Agent: → query_knowledge(nations)
+       → No France guide found
+       → web_search fetches EU5 wiki results
+       → Synthesizes comprehensive response from wiki + mechanics
+```
+
+### Domain Prioritization
+
+Tavily automatically prioritizes these domains in search results:
+
+- `eu5.paradoxwikis.com` (official wiki)
+- `europauniversalisv.wiki` (community wiki)
+
+This ensures high-quality, relevant results for EU5 strategy questions.
+
+### Free Tier Limits
+
+- **1000 searches per month**
+- **Resets monthly**
+- **No credit card required**
+
+For typical usage (5-10 searches per day), the free tier is more than
+sufficient. Heavy users might hit limits toward end of month.
+
+### Without Tavily
+
+The agent functions normally without Tavily configuration:
+
+- All knowledge base queries work perfectly
+- England, economy, military, etc. queries fully supported
+- ⚠️ Queries outside knowledge base won't have web search fallback
+- ⚠️ Agent will synthesize answers from available mechanics knowledge
+
+**Example:** "France opening strategy" without Tavily will give general
+opening strategy advice based on mechanics (diplomacy, military, economy)
+but won't have France-specific wiki content.
+
+### Troubleshooting Tavily
+
+**No results from web search:**
+
+1. Check API key is set: `echo $TAVILY_API_KEY`
+2. Verify API key is valid at [tavily.com](https://tavily.com/)
+3. Check free tier quota hasn't been exceeded
+4. Test with simple query first
+
+**"Warning: tavily-python not installed":**
+
+```bash
+pip install tavily-python
+```
+
+**Rate limiting:**
+
+If you exceed 1000 searches/month, web search will stop working until the
+monthly reset. The agent will continue to work with local knowledge base only.
+
 ## Troubleshooting
 
 ### Error: "OPENAI_API_KEY not set"
@@ -462,6 +582,7 @@ cp .env.groq .env && python run_agent.py
 **Problem:** The agent can't find your API key.
 
 **Solutions:**
+
 1. Check that `.env` file exists: `ls -la .env`
 2. Check that API key is set: `echo $OPENAI_API_KEY`
 3. Make sure `python-dotenv` is installed: `pip install python-dotenv`
@@ -472,6 +593,7 @@ cp .env.groq .env && python run_agent.py
 **Problem:** The API key is incorrect or expired.
 
 **Solutions:**
+
 1. Verify key at https://platform.openai.com/api-keys
 2. Check for typos (keys are case-sensitive)
 3. Generate a new key if needed
@@ -482,9 +604,10 @@ cp .env.groq .env && python run_agent.py
 **Problem:** The agent can't find the EU5 knowledge files.
 
 **Solutions:**
-1. Check that knowledge path exists: `ls -la /home/dimitar/ai/eu5_agent`
+
+1. Check that knowledge path exists: `ls -la /path/to/eu5_agent`
 2. Set correct path: `export EU5_KNOWLEDGE_PATH='/correct/path'`
-3. Verify files exist: `ls /home/dimitar/ai/eu5_agent/*.md`
+3. Verify files exist: `ls /path/to/eu5_agent/*.md`
 
 ### Error: "Unsupported parameter: temperature"
 

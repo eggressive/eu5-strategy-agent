@@ -30,10 +30,10 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 ### Features
 
 - [ ] Implement caching mechanism for repeated queries
-- [ ] Improve search capabilities (semantic search vs. direct file loading)
+- [x] Improve search capabilities (replaced Google with Tavily AI-optimized search)
 - [ ] Add conversation history export/import
-- [ ] Implement rate limiting handling for web search
-- [ ] Add support for custom knowledge base paths (currently hardcoded)
+- [ ] Test Tavily API with various query types and complexity levels
+- [x] Add support for custom knowledge base paths (configurable via EU5_KNOWLEDGE_PATH)
 
 ## Medium Priority
 
@@ -94,5 +94,13 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Track EU5 game patches and update mechanics files
 - [ ] Monitor EU5 wiki for new content and strategies
 - [ ] Update knowledge base as DLCs are released
-- [ ] Address web search rate limiting issues as they occur
+- [x] Address web search rate limiting issues (replaced Google with Tavily API)
 - [ ] Keep dependencies up to date
+
+### Completed This Session
+
+- [x] Replace Google search with Tavily API (AI-optimized, no rate limits)
+- [x] Fix PEP 8 import issues in cli.py
+- [x] Increase agent max_iterations to handle complex web search queries
+- [x] Add Tavily API key configuration and documentation
+- [x] Test and verify meaningful responses with web search

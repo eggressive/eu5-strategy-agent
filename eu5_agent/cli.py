@@ -164,7 +164,7 @@ Examples:
 Environment Variables:
   OPENAI_API_KEY     Your OpenAI API key (required)
   OPENAI_MODEL       Model to use (default: gpt-5-mini)
-  EU5_KNOWLEDGE_PATH Path to knowledge base (default: /home/dimitar/ai/eu5_agent)
+  EU5_KNOWLEDGE_PATH Path to knowledge base (default: repository's knowledge/ directory)
         """
     )
 

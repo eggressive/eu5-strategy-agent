@@ -169,7 +169,9 @@ class EU5Agent:
         })
 
         # Maximum iterations to prevent infinite loops
-        max_iterations = 5
+        # Set to 10 to allow complex queries requiring multiple tool calls
+        # (web search + knowledge base lookups typically need 6-8 iterations)
+        max_iterations = 10
         iteration = 0
 
         while iteration < max_iterations:
@@ -223,9 +225,16 @@ class EU5Agent:
 
             # Safety check
             if iteration >= max_iterations:
-                return "Maximum iterations reached. Please try rephrasing your question."
+                return (
+                    "I've reached the maximum number of research steps for this query. "
+                    "This usually happens with very complex questions. "
+                    "Try asking a more specific question, or break it into smaller parts."
+                )
 
-        return "No response generated."
+        return (
+            "I wasn't able to generate a complete response. "
+            "Please try rephrasing your question or making it more specific."
+        )
 
     def interactive(self):
         """
