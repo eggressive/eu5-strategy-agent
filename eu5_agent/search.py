@@ -13,26 +13,33 @@ Advantages over Google scraping:
 """
 
 import os
+import sys
 from typing import List, Dict, Optional
 
 
-def search_eu5_wiki(query: str, max_results: int = 3) -> List[Dict[str, str]]:
+def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = None) -> List[Dict[str, str]]:
     """
     Search for EU5 content using Tavily API, prioritizing the official wiki.
 
     Args:
         query: Search query (will be prefixed with "EU5" if not already)
         max_results: Maximum number of results to return
+        api_key: Tavily API key (optional, falls back to TAVILY_API_KEY env var)
 
     Returns:
         List of search results with 'title', 'url', and 'snippet'
     """
-    # Check if Tavily API key is available
-    api_key = os.getenv("TAVILY_API_KEY")
+    # Check if Tavily API key is available (from parameter or environment)
+    api_key = api_key or os.getenv("TAVILY_API_KEY")
 
     if not api_key:
         # Tavily is optional - if not configured, return empty list
         # Agent will handle this gracefully
+        return []
+
+    # Validate API key format (Tavily keys start with 'tvly-')
+    if not api_key.startswith('tvly-'):
+        print("Warning: TAVILY_API_KEY appears invalid (should start with 'tvly-')")
         return []
 
     # Ensure query includes EU5 context
@@ -56,10 +63,14 @@ def search_eu5_wiki(query: str, max_results: int = 3) -> List[Dict[str, str]]:
 
         # Extract results from Tavily response
         for item in response.get("results", []):
+            content = item.get("content", "")
+            # Truncate to 300 chars, only add ellipsis if actually truncated
+            snippet = content[:300] + ("..." if len(content) > 300 else "")
+
             results.append({
                 "title": item.get("title", "EU5 Wiki Page"),
                 "url": item.get("url", ""),
-                "snippet": item.get("content", "")[:300] + "..."  # Limit snippet length
+                "snippet": snippet
             })
 
         return results
@@ -74,7 +85,7 @@ def search_eu5_wiki(query: str, max_results: int = 3) -> List[Dict[str, str]]:
         return []
 
 
-def search_eu5_wiki_comprehensive(query: str, max_results: int = 5) -> List[Dict[str, str]]:
+def search_eu5_wiki_comprehensive(query: str, max_results: int = 5, api_key: Optional[str] = None) -> List[Dict[str, str]]:
     """
     Comprehensive search for EU5 content using Tavily's advanced search mode.
 
@@ -82,16 +93,25 @@ def search_eu5_wiki_comprehensive(query: str, max_results: int = 5) -> List[Dict
     Use this when you need more thorough coverage or the basic search
     doesn't return enough relevant results.
 
+    Note: Returns longer snippets (800 chars) compared to basic search (300 chars)
+    to provide more context for complex queries.
+
     Args:
         query: Search query
         max_results: Maximum number of results
+        api_key: Tavily API key (optional, falls back to TAVILY_API_KEY env var)
 
     Returns:
-        List of detailed search results
+        List of detailed search results with 'title', 'url', 'snippet', and 'score'
     """
-    api_key = os.getenv("TAVILY_API_KEY")
+    api_key = api_key or os.getenv("TAVILY_API_KEY")
 
     if not api_key:
+        return []
+
+    # Validate API key format (Tavily keys start with 'tvly-')
+    if not api_key.startswith('tvly-'):
+        print("Warning: TAVILY_API_KEY appears invalid (should start with 'tvly-')")
         return []
 
     # Ensure query includes EU5 context
@@ -115,15 +135,19 @@ def search_eu5_wiki_comprehensive(query: str, max_results: int = 5) -> List[Dict
         results = []
 
         for item in response.get("results", []):
+            content = item.get("content", "")
+            # Truncate to 800 chars for comprehensive search (vs 300 for basic)
+            snippet = content[:800] + ("..." if len(content) > 800 else "")
+
             results.append({
                 "title": item.get("title", "EU5 Content"),
                 "url": item.get("url", ""),
-                "snippet": item.get("content", ""),
+                "snippet": snippet,
                 "score": item.get("score", 0.0)  # Relevance score
             })
 
         # Sort by relevance score (highest first)
-        results.sort(key=lambda x: x.get("score", 0.0), reverse=True)
+        results.sort(key=lambda x: x["score"], reverse=True)
 
         return results
 
@@ -145,7 +169,7 @@ if __name__ == "__main__":
         print("\n⚠️  TAVILY_API_KEY not set!")
         print("Get your free API key at: https://tavily.com/")
         print("Then set it: export TAVILY_API_KEY='your-key-here'")
-        exit(1)
+        sys.exit(1)
 
     # Test basic search
     query = "France opening strategy"

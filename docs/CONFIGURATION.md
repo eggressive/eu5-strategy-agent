@@ -14,7 +14,7 @@ cp .env.example .env
 nano .env  # Change "your-openai-api-key-here" to your actual key
 
 # 3. Run the agent
-python run_eu5_standalone.py
+python run_agent.py
 ```
 
 That's it! The agent will automatically load your configuration from the `.env` file.
@@ -32,12 +32,12 @@ export OPENAI_API_KEY='sk-proj-your-key-here'
 export OPENAI_MODEL='gpt-5-mini'
 export EU5_KNOWLEDGE_PATH='/path/to/eu5_agent'
 
-python run_eu5_standalone.py
+python run_agent.py
 ```
 
 ### 2. .env File
 
-Create a `.env` file in the `openmanus/` directory:
+Create a `.env` file in the project root directory:
 
 ```bash
 OPENAI_API_KEY=sk-proj-your-key-here
@@ -54,7 +54,7 @@ The agent automatically loads this file if `python-dotenv` is installed.
 When creating an agent programmatically:
 
 ```python
-from eu5_standalone.agent import EU5Agent
+from eu5_agent.agent import EU5Agent
 
 agent = EU5Agent(
     api_key="sk-proj-your-key-here",
@@ -73,6 +73,7 @@ agent = EU5Agent(
 | `OPENAI_MODEL` | No | `gpt-5-mini` | Model to use |
 | `OPENAI_BASE_URL` | No | `https://api.openai.com/v1` | API endpoint |
 | `EU5_KNOWLEDGE_PATH` | No | Repository's `knowledge/` directory | Knowledge base path |
+| `TAVILY_API_KEY` | No | None | Tavily API key for web search (optional) |
 
 ### Getting an OpenAI API Key
 
@@ -157,7 +158,7 @@ export OPENAI_MODEL='gpt-5-mini'
 export EU5_KNOWLEDGE_PATH='/opt/eu5_agent'
 
 # Run the agent
-python run_eu5_standalone.py
+python run_agent.py
 ```
 
 ### Example 3: Docker Container
@@ -166,31 +167,31 @@ python run_eu5_standalone.py
 FROM python:3.11
 
 WORKDIR /app
-COPY requirements_standalone.txt .
-RUN pip install -r requirements_standalone.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-COPY eu5_standalone/ ./eu5_standalone/
-COPY run_eu5_standalone.py .
+COPY eu5_agent/ ./eu5_agent/
+COPY run_agent.py .
 
 # Set configuration
 ENV OPENAI_API_KEY=sk-proj-...
 ENV OPENAI_MODEL=gpt-5-mini
 ENV EU5_KNOWLEDGE_PATH=/app/knowledge
 
-CMD ["python", "run_eu5_standalone.py"]
+CMD ["python", "run_agent.py"]
 ```
 
 ### Example 4: Testing Different Models
 
 ```bash
 # Test with gpt-5-mini
-OPENAI_MODEL=gpt-5-mini python run_eu5_standalone.py --query "How do estates work?"
+OPENAI_MODEL=gpt-5-mini python run_agent.py --query "How do estates work?"
 
 # Test with gpt-5 (more detailed)
-OPENAI_MODEL=gpt-5 python run_eu5_standalone.py --query "How do estates work?"
+OPENAI_MODEL=gpt-5 python run_agent.py --query "How do estates work?"
 
 # Test with gpt-4o (previous generation)
-OPENAI_MODEL=gpt-4o python run_eu5_standalone.py --query "How do estates work?"
+OPENAI_MODEL=gpt-4o python run_agent.py --query "How do estates work?"
 ```
 
 ## Alternative LLM Providers
@@ -633,13 +634,13 @@ Test that your configuration is working:
 
 ```bash
 # Test the config module
-python eu5_standalone/config.py
+python eu5_agent/config.py
 
 # Test the full agent
 python test_agent_full.py
 
 # Test with a real query
-python run_eu5_standalone.py --query "How do estates work?" --verbose
+python run_agent.py --query "How do estates work?" --verbose
 ```
 
 ## Advanced: Custom Configuration
@@ -647,8 +648,9 @@ python run_eu5_standalone.py --query "How do estates work?" --verbose
 For advanced use cases, you can create a custom configuration:
 
 ```python
-from eu5_standalone.config import EU5Config
-from eu5_standalone.agent import EU5Agent
+import sys
+from eu5_agent.config import EU5Config
+from eu5_agent.agent import EU5Agent
 
 # Create custom config
 config = EU5Config()
@@ -660,7 +662,7 @@ config.knowledge_path = "/custom/path"
 is_valid, error = config.validate()
 if not is_valid:
     print(f"Config error: {error}")
-    exit(1)
+    sys.exit(1)
 
 # Use with agent
 agent = EU5Agent(config=config)
@@ -708,7 +710,7 @@ If you're still having configuration issues:
 1. Run the test suite: `python test_standalone.py`
 2. Check verbose output: `--verbose` flag
 3. Review logs for error messages
-4. Verify all files exist: `ls eu5_standalone/`
+4. Verify all files exist: `ls eu5_agent/`
 5. Check OpenAI status: https://status.openai.com/
 
 For more help, see:

@@ -114,7 +114,7 @@ class EU5Agent:
         from .search import search_eu5_wiki
 
         try:
-            results = search_eu5_wiki(query, max_results=num_results)
+            results = search_eu5_wiki(query, max_results=num_results, api_key=self.config.tavily_api_key)
             if not results:
                 return f"No results found for: {query}"
 
@@ -223,17 +223,11 @@ class EU5Agent:
             if assistant_message.content:
                 return assistant_message.content
 
-            # Safety check
-            if iteration >= max_iterations:
-                return (
-                    "I've reached the maximum number of research steps for this query. "
-                    "This usually happens with very complex questions. "
-                    "Try asking a more specific question, or break it into smaller parts."
-                )
-
+        # Reached max iterations or no content generated
         return (
-            "I wasn't able to generate a complete response. "
-            "Please try rephrasing your question or making it more specific."
+            "I've reached the maximum number of research steps for this query. "
+            "This usually happens with very complex questions. "
+            "Try asking a more specific question, or break it into smaller parts."
         )
 
     def interactive(self):
