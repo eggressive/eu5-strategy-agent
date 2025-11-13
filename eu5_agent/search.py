@@ -1,131 +1,255 @@
 """
-EU5 Web Search
+EU5 Web Search using Tavily API
 
-Simple Google search for EU5 wiki and strategy content.
-Prioritizes results from eu5.paradoxwikis.com.
+Tavily is an AI-optimized search API designed specifically for LLM agents.
+It provides structured, clean results with content extraction and relevance scoring.
+
+Advantages over Google scraping:
+- Official API (no scraping, no rate limits/blocking)
+- AI-optimized content extraction (clean text, no HTML parsing)
+- Domain filtering (prioritize eu5.paradoxwikis.com)
+- Faster response times (single API call)
+- Relevance scoring for better results
+
+Available Functions:
+- search_eu5_wiki(): Basic search (default, used by agent)
+- search_eu5_wiki_comprehensive(): Advanced search (available for library users)
+
+Note: The comprehensive search is not currently used by the agent but is available
+for direct use by library consumers who need deeper search coverage or longer snippets.
 """
 
-from typing import List, Dict, Optional
-from googlesearch import search as google_search
+import os
+import sys
+import warnings
+from typing import List, Dict, Optional, Any
+
+# Public API
+__all__ = ['search_eu5_wiki', 'search_eu5_wiki_comprehensive']
+
+# Cache for Tavily client instances (keyed by API key)
+# Avoids reinitializing client on every search call
+# Using Any since TavilyClient is imported conditionally inside functions
+_tavily_clients: Dict[str, Any] = {}
 
 
-def search_eu5_wiki(query: str, max_results: int = 3) -> List[Dict[str, str]]:
+def _ensure_eu5_context(query: str) -> str:
     """
-    Search Google for EU5 content, prioritizing the official wiki.
+    Ensure query includes EU5 context for better search results.
+
+    Args:
+        query: Original search query
+
+    Returns:
+        Query prefixed with "EU5" if not already present
+    """
+    if "eu5" not in query.lower() and "europa universalis" not in query.lower():
+        return f"EU5 {query}"
+    return query
+
+
+def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = None) -> List[Dict[str, str]]:
+    """
+    Search for EU5 content using Tavily API, prioritizing the official wiki.
 
     Args:
         query: Search query (will be prefixed with "EU5" if not already)
         max_results: Maximum number of results to return
+        api_key: Tavily API key (optional, falls back to TAVILY_API_KEY env var)
 
     Returns:
-        List of search results with 'title', 'url', and optionally 'snippet'
+        List of search results with 'title', 'url', and 'snippet'
     """
-    # Ensure query includes EU5 context
-    if "eu5" not in query.lower() and "europa universalis" not in query.lower():
-        query = f"EU5 {query}"
+    # Check if Tavily API key is available (from parameter or environment)
+    api_key = api_key or os.getenv("TAVILY_API_KEY")
 
-    results = []
-
-    try:
-        # Use googlesearch-python to get results
-        # It returns URLs, we'll format them
-        urls = list(google_search(query, num_results=max_results * 2, lang="en"))
-
-        # Prioritize eu5.paradoxwikis.com results
-        wiki_results = [url for url in urls if "eu5.paradoxwikis.com" in url]
-        other_results = [url for url in urls if "eu5.paradoxwikis.com" not in url]
-
-        # Combine with wiki results first
-        prioritized_urls = (wiki_results + other_results)[:max_results]
-
-        for url in prioritized_urls:
-            # Extract title from URL (simple approach)
-            title = url.split("/")[-1].replace("_", " ").replace("-", " ")
-            if not title:
-                title = "EU5 Wiki Page"
-
-            results.append({
-                "title": title.title(),
-                "url": url,
-                "snippet": f"Source: {url.split('/')[2]}"  # Domain name
-            })
-
-    except Exception as e:
-        # Return empty list on error, agent will handle it
-        print(f"Search error: {e}")
+    if not api_key:
+        # Tavily is optional - if not configured, return empty list
+        # Agent will handle this gracefully
         return []
 
-    return results
+    # Validate API key format (Tavily keys start with 'tvly-')
+    if not api_key.startswith('tvly-'):
+        warnings.warn(
+            "TAVILY_API_KEY appears invalid (should start with 'tvly-')",
+            UserWarning,
+            stacklevel=2
+        )
+        return []
+
+    # Ensure query includes EU5 context
+    query = _ensure_eu5_context(query)
+
+    try:
+        from tavily import TavilyClient
+
+        # Use cached client if available, otherwise create and cache
+        if api_key not in _tavily_clients:
+            _tavily_clients[api_key] = TavilyClient(api_key=api_key)
+        client = _tavily_clients[api_key]
+
+        # Search with domain prioritization for EU5 wiki
+        response = client.search(
+            query=query,
+            max_results=max_results,
+            include_domains=["eu5.paradoxwikis.com", "europauniversalisv.wiki"],
+            search_depth="basic"  # Use "advanced" for more comprehensive results
+        )
+
+        results = []
+
+        # Extract results from Tavily response
+        for item in response.get("results", []):
+            content = item.get("content", "")
+            # Truncate to 300 chars, only add ellipsis if actually truncated
+            snippet = content[:300] + ("..." if len(content) > 300 else "")
+
+            results.append({
+                "title": item.get("title", "EU5 Wiki Page"),
+                "url": item.get("url", ""),
+                "snippet": snippet
+            })
+
+        return results
+
+    except ImportError:
+        # Tavily not installed
+        warnings.warn(
+            "tavily-python not installed. Run: pip install tavily-python",
+            UserWarning,
+            stacklevel=2
+        )
+        return []
+    except Exception as e:
+        # Return empty list on error, agent will handle it
+        warnings.warn(f"Tavily search error: {e}", UserWarning, stacklevel=2)
+        return []
 
 
-# Alternative: More detailed search with BeautifulSoup (if needed)
-def search_eu5_wiki_detailed(query: str, max_results: int = 3) -> List[Dict[str, str]]:
+def search_eu5_wiki_comprehensive(query: str, max_results: int = 5, api_key: Optional[str] = None) -> List[Dict[str, str]]:
     """
-    Search for EU5 content with detailed result extraction.
+    Comprehensive search for EU5 content using Tavily's advanced search mode.
 
-    This version fetches the actual page content and extracts snippets.
-    Use this if you need more detailed search results.
+    This version uses deeper search with more extensive crawling.
+    Use this when you need more thorough coverage or the basic search
+    doesn't return enough relevant results.
+
+    Note: Returns longer snippets (800 chars) compared to basic search (300 chars)
+    to provide more context for complex queries.
 
     Args:
         query: Search query
         max_results: Maximum number of results
+        api_key: Tavily API key (optional, falls back to TAVILY_API_KEY env var)
 
     Returns:
-        List of detailed search results
+        List of detailed search results with 'title', 'url', 'snippet', and 'score'
     """
-    import requests
-    from bs4 import BeautifulSoup
+    api_key = api_key or os.getenv("TAVILY_API_KEY")
 
-    # Get basic search results first
-    basic_results = search_eu5_wiki(query, max_results)
+    if not api_key:
+        return []
 
-    detailed_results = []
+    # Validate API key format (Tavily keys start with 'tvly-')
+    if not api_key.startswith('tvly-'):
+        warnings.warn(
+            "TAVILY_API_KEY appears invalid (should start with 'tvly-')",
+            UserWarning,
+            stacklevel=2
+        )
+        return []
 
-    for result in basic_results:
-        try:
-            # Fetch the page
-            response = requests.get(result["url"], timeout=5)
-            response.raise_for_status()
+    # Ensure query includes EU5 context
+    query = _ensure_eu5_context(query)
 
-            # Parse HTML
-            soup = BeautifulSoup(response.content, 'html.parser')
+    try:
+        from tavily import TavilyClient
 
-            # Extract title (prefer <h1> or <title>)
-            title_tag = soup.find('h1') or soup.find('title')
-            title = title_tag.get_text().strip() if title_tag else result["title"]
+        # Use cached client if available, otherwise create and cache
+        if api_key not in _tavily_clients:
+            _tavily_clients[api_key] = TavilyClient(api_key=api_key)
+        client = _tavily_clients[api_key]
 
-            # Extract first paragraph as snippet
-            snippet = ""
-            first_p = soup.find('p')
-            if first_p:
-                snippet = first_p.get_text().strip()[:200] + "..."
+        # Advanced search with more comprehensive results
+        response = client.search(
+            query=query,
+            max_results=max_results,
+            include_domains=["eu5.paradoxwikis.com", "europauniversalisv.wiki"],
+            search_depth="advanced",  # More thorough search
+            include_raw_content=False  # Get clean text only
+        )
 
-            detailed_results.append({
-                "title": title,
-                "url": result["url"],
-                "snippet": snippet or result.get("snippet", "")
+        results = []
+
+        for item in response.get("results", []):
+            content = item.get("content", "")
+            # Truncate to 800 chars for comprehensive search (vs 300 for basic)
+            snippet = content[:800] + ("..." if len(content) > 800 else "")
+
+            results.append({
+                "title": item.get("title", "EU5 Content"),
+                "url": item.get("url", ""),
+                "snippet": snippet,
+                "score": item.get("score", 0.0)  # Relevance score
             })
 
-        except Exception as e:
-            # If fetching fails, use basic result
-            detailed_results.append(result)
+        # Sort by relevance score (highest first)
+        results.sort(key=lambda x: x["score"], reverse=True)
 
-    return detailed_results
+        return results
+
+    except ImportError:
+        warnings.warn(
+            "tavily-python not installed. Run: pip install tavily-python",
+            UserWarning,
+            stacklevel=2
+        )
+        return []
+    except Exception as e:
+        warnings.warn(f"Tavily comprehensive search error: {e}", UserWarning, stacklevel=2)
+        return []
 
 
-# Quick test
+# Quick test function
 if __name__ == "__main__":
-    print("Testing EU5 Web Search")
+    print("Testing EU5 Web Search with Tavily API")
     print("="*60)
 
-    # Test search
+    # Check if API key is set
+    if not os.getenv("TAVILY_API_KEY"):
+        print("\n⚠️  TAVILY_API_KEY not set!")
+        print("Get your free API key at: https://tavily.com/")
+        print("Then set it: export TAVILY_API_KEY='your-key-here'")
+        sys.exit(1)
+
+    # Test basic search
     query = "France opening strategy"
-    print(f"\nSearching for: {query}")
+    print(f"\n🔍 Searching for: {query}")
     results = search_eu5_wiki(query, max_results=3)
 
-    print(f"\nFound {len(results)} results:\n")
-    for i, result in enumerate(results, 1):
-        print(f"{i}. {result['title']}")
-        print(f"   {result['url']}")
-        print(f"   {result.get('snippet', '')}")
-        print()
+    if results:
+        print(f"\n✓ Found {len(results)} results:\n")
+        for i, result in enumerate(results, 1):
+            print(f"{i}. {result['title']}")
+            print(f"   {result['url']}")
+            print(f"   {result.get('snippet', '')[:150]}...")
+            print()
+    else:
+        print("\n✗ No results found (check API key or quota)")
+
+    # Test comprehensive search
+    print("\n" + "="*60)
+    print("Testing comprehensive search:")
+    print("="*60)
+
+    comp_results = search_eu5_wiki_comprehensive("estates mechanics", max_results=3)
+
+    if comp_results:
+        print(f"\n✓ Found {len(comp_results)} comprehensive results:\n")
+        for i, result in enumerate(comp_results, 1):
+            score = result.get('score', 0.0)
+            print(f"{i}. {result['title']} (score: {score:.2f})")
+            print(f"   {result['url']}")
+            print()
+    else:
+        print("\n✗ No comprehensive results found")

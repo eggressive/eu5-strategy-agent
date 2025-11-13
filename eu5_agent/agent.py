@@ -6,14 +6,19 @@ Integrates knowledge base and web search tools.
 """
 
 import json
+import logging
 import os
-from typing import List, Dict, Any, Optional
+from typing import List, Optional, cast
 
 from openai import OpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 from .config import get_config, EU5Config
 from .knowledge import EU5Knowledge
 from .prompts import SYSTEM_PROMPT, TOOLS
+
+# Set up logger for this module
+logger = logging.getLogger(__name__)
 
 
 class EU5Agent:
@@ -69,14 +74,14 @@ class EU5Agent:
         # Store config reference for model-specific behavior
         self.config = config
 
-        # Initialize message history
-        self.messages: List[Dict[str, Any]] = []
+        # Initialize message history with proper OpenAI types
+        self.messages: List[ChatCompletionMessageParam] = []
         self.reset()
 
     def reset(self):
         """Reset the conversation history."""
         self.messages = [
-            {"role": "system", "content": SYSTEM_PROMPT}
+            cast(ChatCompletionMessageParam, {"role": "system", "content": SYSTEM_PROMPT})
         ]
 
     def _query_knowledge(self, category: str, subcategory: Optional[str] = None) -> str:
@@ -114,7 +119,7 @@ class EU5Agent:
         from .search import search_eu5_wiki
 
         try:
-            results = search_eu5_wiki(query, max_results=num_results)
+            results = search_eu5_wiki(query, max_results=num_results, api_key=self.config.tavily_api_key)
             if not results:
                 return f"No results found for: {query}"
 
@@ -141,8 +146,9 @@ class EU5Agent:
         Returns:
             Tool execution result as string
         """
-        function_name = tool_call.function.name
-        arguments = json.loads(tool_call.function.arguments)
+        # Type checker has incomplete stubs for tool_call.function
+        function_name = tool_call.function.name  # type: ignore[attr-defined]
+        arguments = json.loads(tool_call.function.arguments)  # type: ignore[attr-defined]
 
         if function_name == "query_knowledge":
             return self._query_knowledge(**arguments)
@@ -163,13 +169,15 @@ class EU5Agent:
             The agent's response
         """
         # Add user message to history
-        self.messages.append({
+        self.messages.append(cast(ChatCompletionMessageParam, {
             "role": "user",
             "content": user_message
-        })
+        }))
 
         # Maximum iterations to prevent infinite loops
-        max_iterations = 5
+        # Set to 10 to allow complex queries requiring multiple tool calls
+        # (web search + knowledge base lookups typically need 6-8 iterations)
+        max_iterations = 10
         iteration = 0
 
         while iteration < max_iterations:
@@ -188,31 +196,33 @@ class EU5Agent:
             assistant_message = response.choices[0].message
 
             # Add assistant message to history
-            self.messages.append(assistant_message.model_dump(exclude_unset=True))
+            # Use cast() since model_dump() returns dict[str, Any] but we know it matches
+            self.messages.append(cast(ChatCompletionMessageParam, assistant_message.model_dump(exclude_unset=True)))
 
             # Check if assistant wants to call tools
             if assistant_message.tool_calls:
                 if verbose:
-                    print(f"\n[Tool Calls: {len(assistant_message.tool_calls)}]")
+                    logger.info(f"\n[Tool Calls: {len(assistant_message.tool_calls)}]")
 
                 # Execute each tool call
                 for tool_call in assistant_message.tool_calls:
                     if verbose:
-                        print(f"  → {tool_call.function.name}({tool_call.function.arguments})")
+                        # Type checker has incomplete stubs for tool_call.function
+                        logger.info(f"  → {tool_call.function.name}({tool_call.function.arguments})")  # type: ignore[attr-defined]
 
                     # Execute the tool
                     tool_result = self._execute_tool_call(tool_call)
 
                     if verbose:
                         preview = tool_result[:200] + "..." if len(tool_result) > 200 else tool_result
-                        print(f"  ✓ Result: {preview}")
+                        logger.info(f"  ✓ Result: {preview}")
 
                     # Add tool result to messages
-                    self.messages.append({
+                    self.messages.append(cast(ChatCompletionMessageParam, {
                         "role": "tool",
-                        "tool_call_id": tool_call.id,
+                        "tool_call_id": tool_call.id,  # type: ignore[attr-defined]
                         "content": tool_result
-                    })
+                    }))
 
                 # Continue loop to get final response after tool execution
                 continue
@@ -221,11 +231,12 @@ class EU5Agent:
             if assistant_message.content:
                 return assistant_message.content
 
-            # Safety check
-            if iteration >= max_iterations:
-                return "Maximum iterations reached. Please try rephrasing your question."
-
-        return "No response generated."
+        # Reached max iterations or no content generated
+        return (
+            "I've reached the maximum number of research steps for this query. "
+            "This usually happens with very complex questions. "
+            "Try asking a more specific question, or break it into smaller parts."
+        )
 
     def interactive(self):
         """

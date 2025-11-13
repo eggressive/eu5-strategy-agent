@@ -56,6 +56,10 @@ class EU5Config:
             default_kb_path
         )
 
+        # Web Search Configuration (Optional)
+        # Tavily provides AI-optimized search when knowledge base is insufficient
+        self.tavily_api_key = os.getenv("TAVILY_API_KEY")
+
         # Model-specific settings
         # Note: gpt-5-mini doesn't support temperature parameter
         self.supports_temperature = self._check_temperature_support()
@@ -114,11 +118,13 @@ class EU5Config:
     def __repr__(self) -> str:
         """String representation for debugging."""
         masked_key = f"{self.api_key[:10]}...{self.api_key[-4:]}" if self.api_key else "NOT SET"
+        tavily_status = "SET" if self.tavily_api_key else "NOT SET (web search disabled)"
         return (
             f"EU5Config(\n"
             f"  model={self.model}\n"
             f"  api_key={masked_key}\n"
             f"  knowledge_path={self.knowledge_path}\n"
+            f"  tavily_api_key={tavily_status}\n"
             f"  supports_temperature={self.supports_temperature}\n"
             f"  uses_max_completion_tokens={self.uses_max_completion_tokens}\n"
             f")"

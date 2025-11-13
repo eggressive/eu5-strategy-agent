@@ -113,6 +113,33 @@ models do).
 
 See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed setup instructions.
 
+### Optional: Web Search
+
+The agent can use **Tavily API** for web search when knowledge base doesn't
+have the answer. This is completely **optional** - the agent works perfectly
+with just the local knowledge base.
+
+#### Enable Web Search (Optional)
+
+1. **Get FREE Tavily API key** (1000 searches/month):
+   [tavily.com](https://tavily.com/)
+
+2. **Add to `.env` file:**
+
+   ```bash
+   TAVILY_API_KEY=your-tavily-api-key-here
+   ```
+
+#### Why Use Tavily?
+
+- AI-optimized search results (clean text, no HTML parsing)
+- Prioritizes `eu5.paradoxwikis.com` domain
+- 1000 free searches per month
+- Falls back gracefully when not configured
+
+**Without Tavily:** Agent works perfectly for all content in knowledge base,
+just can't search the web for content outside the local files.
+
 ### Usage
 
 **Interactive Mode:**
@@ -202,13 +229,11 @@ See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for complete configuration gu
 
 - Python 3.11+
 - OpenAI API key
-- Dependencies (8 packages):
+- Dependencies (5 packages):
   - openai >= 1.0.0
   - pydantic >= 2.0.0
   - rich >= 13.0.0
-  - googlesearch-python >= 1.2.3
-  - requests >= 2.31.0
-  - beautifulsoup4 >= 4.12.0
+  - tavily-python >= 0.3.0 (optional - for web search)
   - python-dotenv >= 1.0.0
 
 ## Documentation
@@ -221,14 +246,14 @@ This is a **standalone agent** independent of any framework:
 
 - **Direct File Loading** - No vector database complexity
 - **Simple OpenAI Integration** - Direct API calls with function calling
-- **Minimal Dependencies** - Only 8 packages required
+- **Minimal Dependencies** - Only 5 packages required
 - **Fast Startup** - < 1 second initialization
 
 The agent uses:
 
 1. **Local knowledge base** (primary) - Direct markdown file loading
-2. **Web search** (fallback) - Google search prioritizing
-   eu5.paradoxwikis.com
+2. **Web search** - Tavily API for AI-optimized search
+   - Prioritizes eu5.paradoxwikis.com
 3. **GPT-5-mini** - OpenAI's latest efficient model
 
 ## Testing

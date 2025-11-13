@@ -4,6 +4,9 @@ EU5 Strategy Agent Prompts
 System prompt and tool definitions for OpenAI function calling.
 """
 
+from typing import List
+from openai.types.chat import ChatCompletionToolParam
+
 # System prompt for the EU5 strategy advisor
 SYSTEM_PROMPT = """You are an expert strategy advisor for Europa Universalis 5 (EU5), a grand strategy game spanning from 1337 to 1837. Your role is to provide strategic guidance, opening moves, and winning tactics to players of all skill levels.
 
@@ -54,7 +57,7 @@ For opening strategies, provide:
 Always be encouraging and help players understand that EU5 is a complex game that rewards patience and strategic thinking."""
 
 # Tool definitions for OpenAI function calling
-TOOLS = [
+TOOLS: List[ChatCompletionToolParam] = [
     {
         "type": "function",
         "function": {

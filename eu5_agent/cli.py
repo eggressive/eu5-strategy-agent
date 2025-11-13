@@ -5,6 +5,7 @@ Beautiful command-line interface using Rich for formatting.
 """
 
 import argparse
+import logging
 import os
 import sys
 from pathlib import Path
@@ -164,7 +165,7 @@ Examples:
 Environment Variables:
   OPENAI_API_KEY     Your OpenAI API key (required)
   OPENAI_MODEL       Model to use (default: gpt-5-mini)
-  EU5_KNOWLEDGE_PATH Path to knowledge base (default: /home/dimitar/ai/eu5_agent)
+  EU5_KNOWLEDGE_PATH Path to knowledge base (default: repository's knowledge/ directory)
         """
     )
 
@@ -188,6 +189,14 @@ Environment Variables:
     )
 
     args = parser.parse_args()
+
+    # Configure logging if verbose mode is enabled
+    if args.verbose:
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
 
     # Load .env file early to enable API key validation below
     # Note: This will be called again in EU5Config.__init__(), but that's
