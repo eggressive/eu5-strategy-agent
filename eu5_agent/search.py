@@ -10,11 +10,42 @@ Advantages over Google scraping:
 - Domain filtering (prioritize eu5.paradoxwikis.com)
 - Faster response times (single API call)
 - Relevance scoring for better results
+
+Available Functions:
+- search_eu5_wiki(): Basic search (default, used by agent)
+- search_eu5_wiki_comprehensive(): Advanced search (available for library users)
+
+Note: The comprehensive search is not currently used by the agent but is available
+for direct use by library consumers who need deeper search coverage or longer snippets.
 """
 
 import os
 import sys
-from typing import List, Dict, Optional
+import warnings
+from typing import List, Dict, Optional, Any
+
+# Public API
+__all__ = ['search_eu5_wiki', 'search_eu5_wiki_comprehensive']
+
+# Cache for Tavily client instances (keyed by API key)
+# Avoids reinitializing client on every search call
+# Using Any since TavilyClient is imported conditionally inside functions
+_tavily_clients: Dict[str, Any] = {}
+
+
+def _ensure_eu5_context(query: str) -> str:
+    """
+    Ensure query includes EU5 context for better search results.
+
+    Args:
+        query: Original search query
+
+    Returns:
+        Query prefixed with "EU5" if not already present
+    """
+    if "eu5" not in query.lower() and "europa universalis" not in query.lower():
+        return f"EU5 {query}"
+    return query
 
 
 def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = None) -> List[Dict[str, str]]:
@@ -39,17 +70,23 @@ def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = N
 
     # Validate API key format (Tavily keys start with 'tvly-')
     if not api_key.startswith('tvly-'):
-        print("Warning: TAVILY_API_KEY appears invalid (should start with 'tvly-')")
+        warnings.warn(
+            "TAVILY_API_KEY appears invalid (should start with 'tvly-')",
+            UserWarning,
+            stacklevel=2
+        )
         return []
 
     # Ensure query includes EU5 context
-    if "eu5" not in query.lower() and "europa universalis" not in query.lower():
-        query = f"EU5 {query}"
+    query = _ensure_eu5_context(query)
 
     try:
         from tavily import TavilyClient
 
-        client = TavilyClient(api_key=api_key)
+        # Use cached client if available, otherwise create and cache
+        if api_key not in _tavily_clients:
+            _tavily_clients[api_key] = TavilyClient(api_key=api_key)
+        client = _tavily_clients[api_key]
 
         # Search with domain prioritization for EU5 wiki
         response = client.search(
@@ -77,11 +114,15 @@ def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = N
 
     except ImportError:
         # Tavily not installed
-        print("Warning: tavily-python not installed. Run: pip install tavily-python")
+        warnings.warn(
+            "tavily-python not installed. Run: pip install tavily-python",
+            UserWarning,
+            stacklevel=2
+        )
         return []
     except Exception as e:
         # Return empty list on error, agent will handle it
-        print(f"Tavily search error: {e}")
+        warnings.warn(f"Tavily search error: {e}", UserWarning, stacklevel=2)
         return []
 
 
@@ -111,17 +152,23 @@ def search_eu5_wiki_comprehensive(query: str, max_results: int = 5, api_key: Opt
 
     # Validate API key format (Tavily keys start with 'tvly-')
     if not api_key.startswith('tvly-'):
-        print("Warning: TAVILY_API_KEY appears invalid (should start with 'tvly-')")
+        warnings.warn(
+            "TAVILY_API_KEY appears invalid (should start with 'tvly-')",
+            UserWarning,
+            stacklevel=2
+        )
         return []
 
     # Ensure query includes EU5 context
-    if "eu5" not in query.lower() and "europa universalis" not in query.lower():
-        query = f"EU5 {query}"
+    query = _ensure_eu5_context(query)
 
     try:
         from tavily import TavilyClient
 
-        client = TavilyClient(api_key=api_key)
+        # Use cached client if available, otherwise create and cache
+        if api_key not in _tavily_clients:
+            _tavily_clients[api_key] = TavilyClient(api_key=api_key)
+        client = _tavily_clients[api_key]
 
         # Advanced search with more comprehensive results
         response = client.search(
@@ -152,10 +199,14 @@ def search_eu5_wiki_comprehensive(query: str, max_results: int = 5, api_key: Opt
         return results
 
     except ImportError:
-        print("Warning: tavily-python not installed. Run: pip install tavily-python")
+        warnings.warn(
+            "tavily-python not installed. Run: pip install tavily-python",
+            UserWarning,
+            stacklevel=2
+        )
         return []
     except Exception as e:
-        print(f"Tavily comprehensive search error: {e}")
+        warnings.warn(f"Tavily comprehensive search error: {e}", UserWarning, stacklevel=2)
         return []
 
 

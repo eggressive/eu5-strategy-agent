@@ -252,8 +252,8 @@ This is a **standalone agent** independent of any framework:
 The agent uses:
 
 1. **Local knowledge base** (primary) - Direct markdown file loading
-2. **Web search** (fallback) - Tavily API for AI-optimized search
-   eu5.paradoxwikis.com
+2. **Web search** - Tavily API for AI-optimized search
+   - Prioritizes eu5.paradoxwikis.com
 3. **GPT-5-mini** - OpenAI's latest efficient model
 
 ## Testing

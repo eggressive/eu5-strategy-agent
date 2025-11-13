@@ -72,12 +72,12 @@ agent = EU5Agent(
 | `OPENAI_API_KEY` | **Yes** | None | Your OpenAI API key |
 | `OPENAI_MODEL` | No | `gpt-5-mini` | Model to use |
 | `OPENAI_BASE_URL` | No | `https://api.openai.com/v1` | API endpoint |
-| `EU5_KNOWLEDGE_PATH` | No | Repository's `knowledge/` directory | Knowledge base path |
-| `TAVILY_API_KEY` | No | None | Tavily API key for web search (optional) |
+| `EU5_KNOWLEDGE_PATH` | No | Repo's `knowledge/` dir | Knowledge base path |
+| `TAVILY_API_KEY` | No | None | Tavily API key (optional) |
 
 ### Getting an OpenAI API Key
 
-1. Go to https://platform.openai.com/api-keys
+1. Go to <https://platform.openai.com/api-keys>
 2. Sign in or create an account
 3. Click "Create new secret key"
 4. Copy the key (starts with `sk-proj-`)
@@ -196,8 +196,9 @@ OPENAI_MODEL=gpt-4o python run_agent.py --query "How do estates work?"
 
 ## Alternative LLM Providers
 
-The agent supports **OpenAI-compatible API providers**, allowing you to use free or
-cheaper alternatives by changing `OPENAI_BASE_URL` and `OPENAI_API_KEY`.
+The agent supports **OpenAI-compatible API providers**, allowing you to use
+free or cheaper alternatives by changing `OPENAI_BASE_URL` and
+`OPENAI_API_KEY`.
 
 ### Requirements
 
@@ -221,7 +222,7 @@ OPENAI_BASE_URL=https://api.groq.com/openai/v1
 OPENAI_MODEL=llama-3.1-8b-instant
 ```
 
-**Get API Key:** https://console.groq.com/
+**Get API Key:** <https://console.groq.com/>
 
 **Available Models:**
 
@@ -256,7 +257,7 @@ OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 OPENAI_MODEL=gemini-2.5-flash
 ```
 
-**Get API Key:** https://aistudio.google.com/apikey
+**Get API Key:** <https://aistudio.google.com/apikey>
 
 **Available Models:**
 
@@ -289,7 +290,7 @@ OPENAI_BASE_URL=https://openrouter.ai/api/v1
 OPENAI_MODEL=meta-llama/llama-3.3-70b-instruct
 ```
 
-**Get API Key:** https://openrouter.ai/keys
+**Get API Key:** <https://openrouter.ai/keys>
 
 **Free Models:**
 
@@ -326,7 +327,7 @@ OPENAI_BASE_URL=https://api.together.xyz/v1
 OPENAI_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
 ```
 
-**Get API Key:** https://api.together.ai/settings/api-keys
+**Get API Key:** <https://api.together.ai/settings/api-keys>
 
 **Popular Models:**
 
@@ -359,7 +360,7 @@ OPENAI_BASE_URL=https://api.deepinfra.com/v1/openai
 OPENAI_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
 ```
 
-**Get API Key:** https://deepinfra.com/dash/api_keys
+**Get API Key:** <https://deepinfra.com/dash/api_keys>
 
 **Available Models:**
 
@@ -508,7 +509,8 @@ python run_agent.py --query "What's France's opening strategy?" --verbose
 When you query about content not in the local knowledge base:
 
 **Without Tavily:**
-```
+
+```text
 User: "What's France's opening strategy?"
 Agent: → query_knowledge(nations)
        → No France guide found
@@ -517,7 +519,8 @@ Agent: → query_knowledge(nations)
 ```
 
 **With Tavily:**
-```
+
+```text
 User: "What's France's opening strategy?"
 Agent: → query_knowledge(nations)
        → No France guide found
@@ -595,7 +598,7 @@ monthly reset. The agent will continue to work with local knowledge base only.
 
 **Solutions:**
 
-1. Verify key at https://platform.openai.com/api-keys
+1. Verify key at <https://platform.openai.com/api-keys>
 2. Check for typos (keys are case-sensitive)
 3. Generate a new key if needed
 4. Make sure key starts with `sk-proj-` or `sk-`
@@ -615,6 +618,7 @@ monthly reset. The agent will continue to work with local knowledge base only.
 **Problem:** Using gpt-5-mini with explicit temperature parameter.
 
 **Solution:** This should be handled automatically. If you see this error:
+
 1. Update to latest agent code
 2. Don't manually set temperature in API calls
 3. Let the agent handle model-specific parameters
@@ -624,8 +628,9 @@ monthly reset. The agent will continue to work with local knowledge base only.
 **Problem:** The specified model doesn't exist or isn't available.
 
 **Solutions:**
+
 1. Check model name spelling: `gpt-5-mini` not `gpt5-mini`
-2. Verify model access at https://platform.openai.com/docs/models
+2. Verify model access at <https://platform.openai.com/docs/models>
 3. Try default: `unset OPENAI_MODEL` (uses gpt-5-mini)
 
 ## Testing Configuration
@@ -699,9 +704,11 @@ response = agent.chat("Your question here")
 
 - **Never share your API key** - it can be used to charge your account
 - **Rotate keys regularly** - generate new keys every few months
-- **Monitor usage** - check https://platform.openai.com/usage for unexpected charges
+- **Monitor usage** - check <https://platform.openai.com/usage> for unexpected
+  charges
 - **Use separate keys** - development vs production
-- **Set spending limits** - configure at https://platform.openai.com/account/billing/limits
+- **Set spending limits** - configure at
+  <https://platform.openai.com/account/billing/limits>
 
 ## Support
 
@@ -711,9 +718,10 @@ If you're still having configuration issues:
 2. Check verbose output: `--verbose` flag
 3. Review logs for error messages
 4. Verify all files exist: `ls eu5_agent/`
-5. Check OpenAI status: https://status.openai.com/
+5. Check OpenAI status: <https://status.openai.com/>
 
 For more help, see:
+
 - Main README: `README_STANDALONE.md`
-- OpenAI Docs: https://platform.openai.com/docs
+- OpenAI Docs: <https://platform.openai.com/docs>
 - EU5 Agent Repo: (your repository link)

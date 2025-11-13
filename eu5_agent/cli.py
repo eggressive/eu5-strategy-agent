@@ -5,6 +5,7 @@ Beautiful command-line interface using Rich for formatting.
 """
 
 import argparse
+import logging
 import os
 import sys
 from pathlib import Path
@@ -188,6 +189,14 @@ Environment Variables:
     )
 
     args = parser.parse_args()
+
+    # Configure logging if verbose mode is enabled
+    if args.verbose:
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
 
     # Load .env file early to enable API key validation below
     # Note: This will be called again in EU5Config.__init__(), but that's
