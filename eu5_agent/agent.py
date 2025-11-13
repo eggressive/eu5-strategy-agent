@@ -8,7 +8,7 @@ Integrates knowledge base and web search tools.
 import json
 import logging
 import os
-from typing import List, Dict, Any, Optional, cast
+from typing import List, Optional, cast
 
 from openai import OpenAI
 from openai.types.chat import ChatCompletionMessageParam
