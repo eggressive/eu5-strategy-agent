@@ -8,6 +8,7 @@ Demonstrates the functionality without requiring API calls.
 from eu5_agent.knowledge import EU5Knowledge
 from eu5_agent.search import search_eu5_wiki
 
+
 def test_knowledge_base():
     """Test the knowledge base loading."""
     print("=" * 70)
@@ -21,10 +22,10 @@ def test_knowledge_base():
 
     # Test mechanics - society (estates)
     print("\n--- Testing: mechanics/society ---")
-    result = kb.get_knowledge('mechanics', 'society')
-    if result['status'] == 'success':
+    result = kb.get_knowledge("mechanics", "society")
+    if result["status"] == "success":
         print(f"✓ Loaded: {result['file']} ({result['size']:,} bytes)")
-        lines = result['content'].split('\n')[:15]
+        lines = result["content"].split("\n")[:15]
         print("First 15 lines:")
         for line in lines:
             print(f"  {line}")
@@ -33,8 +34,8 @@ def test_knowledge_base():
 
     # Test strategy - beginner
     print("\n--- Testing: strategy/beginner_route ---")
-    result = kb.get_knowledge('strategy', 'beginner_route')
-    if result['status'] == 'success':
+    result = kb.get_knowledge("strategy", "beginner_route")
+    if result["status"] == "success":
         print(f"✓ Loaded: {result['file']} ({result['size']:,} bytes)")
         print(f"Preview: {result['content'][:200]}...")
     else:
@@ -42,8 +43,8 @@ def test_knowledge_base():
 
     # Test nations - England
     print("\n--- Testing: nations/england ---")
-    result = kb.get_knowledge('nations', 'england')
-    if result['status'] == 'success':
+    result = kb.get_knowledge("nations", "england")
+    if result["status"] == "success":
         print(f"✓ Loaded: {result['file']} ({result['size']:,} bytes)")
         print(f"Preview: {result['content'][:200]}...")
     else:
@@ -84,9 +85,9 @@ def test_agent_structure():
 
     try:
         # This will fail without API key, but we can check imports
-        from eu5_agent.agent import EU5Agent
+        from eu5_agent.agent import EU5Agent  # noqa: F401
         from eu5_agent.prompts import SYSTEM_PROMPT, TOOLS
-        from eu5_agent.cli import print_banner, print_help
+        from eu5_agent.cli import print_banner, print_help  # noqa: F401
 
         print("\n✓ All modules import successfully")
         print(f"✓ System prompt length: {len(SYSTEM_PROMPT):,} chars")
