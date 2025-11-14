@@ -55,6 +55,9 @@ where = ["."]
 include = ["eu5_agent*"]
 exclude = ["tests*"]
 
+[tool.setuptools.package-data]
+eu5_agent = ["knowledge/**/*.md"]
+
 [tool.black]
 line-length = 100
 target-version = ['py311']

@@ -56,19 +56,33 @@ class EU5Knowledge:
                            Defaults to the 'knowledge' directory in the repository.
         """
         if knowledge_path is None:
-            # Try environment variable first, then use repository's knowledge directory
-            knowledge_path = os.getenv(
-                "EU5_KNOWLEDGE_PATH",
-                None
-            )
+            # Try environment variable first
+            knowledge_path = os.getenv("EU5_KNOWLEDGE_PATH", None)
 
             if knowledge_path is None:
-                # Default to repository's knowledge directory
+                # Auto-detect knowledge base location
+                # Supports both pip-installed package and source repository
+                package_dir = Path(__file__).parent
+
+                # Try package-relative path first (pip install, new structure)
                 # Path(__file__) = .../eu5_agent/knowledge.py
-                # .parent.parent = repository root
-                # / "knowledge" = knowledge directory
-                repo_root = Path(__file__).parent.parent
-                knowledge_path = str(repo_root / "knowledge")
+                # .parent = eu5_agent package directory
+                # / "knowledge" = knowledge directory inside package
+                pkg_knowledge = package_dir / "knowledge"
+
+                if pkg_knowledge.exists():
+                    # New structure: knowledge inside package (pip install)
+                    knowledge_path = str(pkg_knowledge)
+                else:
+                    # Fall back to repository structure (running from source)
+                    # Path(__file__).parent.parent = repository root
+                    # / "knowledge" = knowledge directory at repo root (via symlink)
+                    repo_knowledge = package_dir.parent / "knowledge"
+                    if repo_knowledge.exists():
+                        knowledge_path = str(repo_knowledge)
+                    else:
+                        # Neither location found, default to package-relative
+                        knowledge_path = str(pkg_knowledge)
 
         self.knowledge_path = Path(knowledge_path)
 
