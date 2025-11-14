@@ -49,12 +49,11 @@ class EU5Config:
         self.base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 
         # Knowledge Base Configuration
-        # Default to repository's knowledge directory if not specified
-        default_kb_path = str(Path(__file__).parent.parent / "knowledge")
-        self.knowledge_path = os.getenv(
-            "EU5_KNOWLEDGE_PATH",
-            default_kb_path
-        )
+        # Set to None to trigger auto-detection in knowledge.py
+        # This enables backward-compatible path detection for both:
+        # - pip-installed package (knowledge inside eu5_agent/)
+        # - source repository (knowledge at repository root via symlink)
+        self.knowledge_path = os.getenv("EU5_KNOWLEDGE_PATH", None)
 
         # Web Search Configuration (Optional)
         # Tavily provides AI-optimized search when knowledge base is insufficient

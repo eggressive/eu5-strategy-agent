@@ -137,3 +137,4 @@ Thumbs.db
 logs/
 workspace/
 CLAUDE.md
+/knowledge  # Symlink for backward compatibility (source → package structure)
