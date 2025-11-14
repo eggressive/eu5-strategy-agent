@@ -8,6 +8,7 @@ Simple script to verify OpenAI API authentication and model availability.
 from openai import OpenAI
 import time
 
+
 def test_api_key():
     """Test the OpenAI API key with specified configuration."""
 
@@ -17,7 +18,7 @@ def test_api_key():
         "base_url": "https://api.openai.com/v1",
         "api_key": "YOUR_OPENAI_API_KEY",
         "max_tokens": 8192,
-        "temperature": 0.0
+        "temperature": 0.0,
     }
 
     print("=" * 70)
@@ -33,10 +34,7 @@ def test_api_key():
     try:
         # Initialize OpenAI client
         print("\n[1/3] Initializing OpenAI client...")
-        client = OpenAI(
-            api_key=config["api_key"],
-            base_url=config["base_url"]
-        )
+        client = OpenAI(api_key=config["api_key"], base_url=config["base_url"])
         print("✓ Client initialized")
 
         # Make API call
@@ -47,9 +45,9 @@ def test_api_key():
             model=config["model"],
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Say 'API test successful' if you can read this."}
+                {"role": "user", "content": "Say 'API test successful' if you can read this."},
             ],
-            max_completion_tokens=50  # gpt-5 models use max_completion_tokens
+            max_completion_tokens=50,  # gpt-5 models use max_completion_tokens
             # Note: gpt-5-mini only supports temperature=1 (default), so we omit it
         )
 
@@ -64,10 +62,10 @@ def test_api_key():
 
         print(f"\nModel used: {response.model}")
         print(f"Response ID: {response.id}")
-        print(f"\nAssistant response:")
+        print("\nAssistant response:")
         print(f"  {response.choices[0].message.content}")
 
-        print(f"\nToken usage:")
+        print("\nToken usage:")
         print(f"  Prompt tokens: {response.usage.prompt_tokens}")
         print(f"  Completion tokens: {response.usage.completion_tokens}")
         print(f"  Total tokens: {response.usage.total_tokens}")
