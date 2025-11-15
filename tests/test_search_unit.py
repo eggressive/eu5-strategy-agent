@@ -171,11 +171,3 @@ class TestBasicSearch:
 
         call_args = mock_client.search.call_args
         assert call_args[1]["search_depth"] == "basic"
-
-
-# Comprehensive search tests removed for simplicity
-# Coverage: basic search, error handling, caching, integration
-
-# Result parsing tests removed for simplicity
-
-# Result parsing tests removed for simplicity

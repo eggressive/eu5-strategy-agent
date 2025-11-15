@@ -166,7 +166,8 @@ def clean_env(monkeypatch) -> None:
     """
     Clean environment variables for testing.
 
-    Removes all EU5 and OpenAI related environment variables.
+    Removes all EU5 and OpenAI related environment variables
+    and prevents .env file loading.
     """
     env_vars = [
         "OPENAI_API_KEY",
@@ -178,6 +179,9 @@ def clean_env(monkeypatch) -> None:
 
     for var in env_vars:
         monkeypatch.delenv(var, raising=False)
+
+    # Prevent .env file loading during tests
+    monkeypatch.setattr("eu5_agent.config.load_dotenv_if_present", lambda: False)
 
 
 @pytest.fixture

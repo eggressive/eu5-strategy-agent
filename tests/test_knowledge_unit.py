@@ -47,9 +47,6 @@ class TestKnowledgeInitialization:
         knowledge_dir = package_dir / "knowledge"
         knowledge_dir.mkdir(parents=True)
 
-        # Mock __file__ to point to our test package
-        _mock_file = str(package_dir / "knowledge.py")  # noqa: F841
-
         with patch("eu5_agent.knowledge.Path") as mock_path:
             mock_path.return_value.parent = package_dir
             mock_instance = Mock()

@@ -12,7 +12,6 @@ Tests cover:
 
 from unittest.mock import patch
 
-
 from eu5_agent.config import EU5Config, get_config, reset_config, load_dotenv_if_present
 
 
@@ -300,6 +299,12 @@ class TestConfigIntegration:
 
     def test_config_with_partial_environment(self, monkeypatch):
         """Test configuration with only some environment variables set."""
+        # Clear existing environment
+        monkeypatch.delenv("TAVILY_API_KEY", raising=False)
+
+        # Prevent .env file loading
+        monkeypatch.setattr("eu5_agent.config.load_dotenv_if_present", lambda: False)
+
         monkeypatch.setenv("OPENAI_API_KEY", "sk-partial-test")
         # Don't set other variables, use defaults
 
