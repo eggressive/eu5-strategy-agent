@@ -148,11 +148,30 @@ class EU5Agent:
         """
         # Type checker has incomplete stubs for tool_call.function
         function_name = tool_call.function.name  # type: ignore[attr-defined]
-        arguments = json.loads(tool_call.function.arguments)  # type: ignore[attr-defined]
+
+        try:
+            arguments = json.loads(tool_call.function.arguments)  # type: ignore[attr-defined]
+        except json.JSONDecodeError as exc:
+            return f"Error: invalid tool arguments (JSON decode failed: {exc})"
+
+        # Basic validation per tool to avoid KeyError and provide clear errors
+        if function_name == "query_knowledge":
+            if not isinstance(arguments, dict) or "category" not in arguments:
+                return "Error: invalid tool arguments (missing 'category' for query_knowledge)"
+            if not isinstance(arguments.get("category"), str):
+                return "Error: invalid tool arguments ('category' must be a string)"
+            if arguments.get("subcategory") is not None and not isinstance(arguments.get("subcategory"), str):
+                return "Error: invalid tool arguments ('subcategory' must be a string if provided)"
 
         if function_name == "query_knowledge":
             return self._query_knowledge(**arguments)
         elif function_name == "web_search":
+            if not isinstance(arguments, dict) or "query" not in arguments:
+                return "Error: invalid tool arguments (missing 'query' for web_search)"
+            if not isinstance(arguments.get("query"), str):
+                return "Error: invalid tool arguments ('query' must be a string)"
+            if arguments.get("num_results") is not None and not isinstance(arguments.get("num_results"), int):
+                return "Error: invalid tool arguments ('num_results' must be an integer if provided)"
             return self._web_search(**arguments)
         else:
             return f"Unknown tool: {function_name}"

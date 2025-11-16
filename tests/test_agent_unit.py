@@ -329,9 +329,25 @@ class TestErrorHandling:
         tool_call.function.name = "query_knowledge"
         tool_call.function.arguments = "invalid json"
 
-        # Should handle the JSON decode error
-        with pytest.raises(json.JSONDecodeError):
-            agent._execute_tool_call(tool_call)
+        result = agent._execute_tool_call(tool_call)
+
+        assert "invalid tool arguments" in result.lower()
+        assert "json decode failed" in result.lower()
+
+    def test_tool_execution_missing_required_args(self, temp_knowledge_base, monkeypatch):
+        """Test that missing required args returns a clear error."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent()
+
+        tool_call = Mock()
+        tool_call.function.name = "web_search"
+        tool_call.function.arguments = json.dumps({"num_results": 2})
+
+        result = agent._execute_tool_call(tool_call)
+
+        assert "missing 'query'" in result.lower()
 
 
 class TestAgentIntegration:

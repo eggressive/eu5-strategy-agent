@@ -2,20 +2,23 @@
 
 This document tracks planned enhancements and features for the EU5 Strategy Agent.
 
-## TIER 1 - Quality & Reliability (Critical)
+## TIER 1 - Quality & Reliability
 
-**Rationale**: Agent is being shared for testing - must be reliable and error-free.
+### Agent Reliability
+
+- [x] Harden tool-call argument parsing so malformed JSON from the model surfaces as a graceful error instead of crashing the chat loop.
 
 ### Testing Infrastructure
 
-- [ ] Add unit tests for core agent functionality
+- [x] Add unit tests for core agent functionality
 - [ ] Add integration tests for OpenAI API interactions
-- [ ] Add tests for knowledge base loading
-- [ ] Add tests for web search fallback
+- [x] Add tests for knowledge base loading
+- [x] Add tests for web search fallback
 - [ ] Migrate from manual test scripts to pytest test suite
 
 ### Configuration Validation
 
+- [ ] Align `EU5Config.validate()` with knowledge path auto-detection (don’t fail validation when path is omitted; use the same resolution logic).
 - [ ] Add configuration validation before agent starts
 - [ ] Validate API keys exist and have correct format
 - [ ] Check knowledge base path exists and is readable
@@ -24,13 +27,14 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 
 ### Tavily Integration Testing
 
+- [ ] Differentiate Tavily misconfiguration/missing API key from genuine zero-result searches to give clearer user feedback.
 - [ ] Test Tavily API with various query types
 - [ ] Test with different complexity levels
 - [ ] Verify fallback behavior when Tavily fails
 - [ ] Document optimal query patterns for Tavily
 - [ ] Monitor API usage and rate limits
 
-## TIER 2 - Cost Reduction (High Value)
+## TIER 2 - Cost Reduction
 
 **Rationale**: OpenAI GPT-5 is expensive - alternative providers can significantly reduce costs.
 
@@ -49,7 +53,7 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Add response memoization for identical questions
 - [ ] Monitor and log cache hit rates
 
-## TIER 3 - User Experience (Quality of Life)
+## TIER 3 - User Experience
 
 **Rationale**: Improve usability for end users (your son and others).
 
@@ -66,7 +70,7 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Parallelize knowledge base queries
 - [ ] Improve response time for complex queries
 
-## TIER 4 - Content Expansion (After Core is Solid)
+## TIER 4 - Content Expansion
 
 **Rationale**: Expand knowledge base once technical foundation is stable.
 
@@ -107,6 +111,10 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Document competitive play differences
 - [ ] Add nation tier lists for multiplayer
 
+### CLI & Help Text
+
+- [ ] Fix CLI help/epilog to reference the correct module path (`eu5_agent.cli`) to avoid `ModuleNotFoundError`.
+
 ### Local Model Support (Experimental)
 
 - [ ] Test Ollama integration with function calling
@@ -125,16 +133,6 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Keep dependencies up to date
 
 ### Completed This Session
-
-**Tavily Integration:**
-
-- [x] Replace Google search with Tavily API (AI-optimized, no rate limits)
-- [x] Increase agent max_iterations to 10 for complex web search queries
-- [x] Add Tavily API key configuration and documentation
-- [x] Test and verify meaningful responses with web search
-- [x] Add Tavily client caching for performance optimization
-- [x] Add API key format validation (tvly- prefix)
-- [x] Extract query context prefixing into helper function (DRY)
 
 **Code Quality & Best Practices:**
 
