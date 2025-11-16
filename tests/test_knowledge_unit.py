@@ -3,7 +3,6 @@ Unit tests for EU5 Knowledge Base (eu5_agent/knowledge.py).
 
 Tests cover:
 - Auto-detection logic for pip-installed package structure
-- Auto-detection fallback to repository structure (symlink)
 - Environment variable override (EU5_KNOWLEDGE_PATH)
 - Error handling when knowledge base directory missing
 - Category-based file organization
@@ -55,28 +54,6 @@ class TestKnowledgeInitialization:
 
             # Should find knowledge in package directory without raising exception
             EU5Knowledge()
-
-    def test_auto_detect_repository_structure(self, tmp_path):
-        """Test auto-detection fallback to repository structure."""
-        # This test verifies the fallback logic is present, but the complex
-        # path mocking is difficult. We'll test the actual behavior through
-        # integration instead. This test just verifies no exception when
-        # the auto-detection logic runs.
-
-        # Create repo structure: repo_root/knowledge/
-        repo_root = tmp_path
-        knowledge_dir = repo_root / "knowledge"
-        knowledge_dir.mkdir()
-
-        # Create package dir without knowledge
-        package_dir = repo_root / "eu5_agent"
-        package_dir.mkdir()
-
-        # For this test, we'll just verify the logic handles the fallback path
-        # The actual auto-detection is tested via integration tests
-        assert knowledge_dir.exists()
-        assert not (package_dir / "knowledge").exists()
-        # Test passes if no exception is raised during structure verification
 
 
 class TestKnowledgeCategories:

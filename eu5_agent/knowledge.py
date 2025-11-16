@@ -60,29 +60,14 @@ class EU5Knowledge:
             knowledge_path = os.getenv("EU5_KNOWLEDGE_PATH", None)
 
             if knowledge_path is None:
-                # Auto-detect knowledge base location
-                # Supports both pip-installed package and source repository
+                # Auto-detect knowledge base location (package relative)
                 package_dir = Path(__file__).parent
 
-                # Try package-relative path first (pip install, new structure)
                 # Path(__file__) = .../eu5_agent/knowledge.py
                 # .parent = eu5_agent package directory
                 # / "knowledge" = knowledge directory inside package
                 pkg_knowledge = package_dir / "knowledge"
-
-                if pkg_knowledge.exists():
-                    # New structure: knowledge inside package (pip install)
-                    knowledge_path = str(pkg_knowledge)
-                else:
-                    # Fall back to repository structure (running from source)
-                    # Path(__file__).parent.parent = repository root
-                    # / "knowledge" = knowledge directory at repo root (via symlink)
-                    repo_knowledge = package_dir.parent / "knowledge"
-                    if repo_knowledge.exists():
-                        knowledge_path = str(repo_knowledge)
-                    else:
-                        # Neither location found, default to package-relative
-                        knowledge_path = str(pkg_knowledge)
+                knowledge_path = str(pkg_knowledge)
 
         self.knowledge_path = Path(knowledge_path)
 
