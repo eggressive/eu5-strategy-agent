@@ -1,12 +1,16 @@
 # EU5 Society Mechanics
 
-This document provides a comprehensive overview of estates, population classes, and social systems in Europa Universalis 5.
+This document provides a comprehensive overview of estates, population classes,
+and social systems in Europa Universalis 5.
 
 ## Estate System Overview
 
-Estates function as **special interest groups within a country** that provide taxation, army levies, and naval support. Each character in your nation belongs to one estate, creating a complex social structure that affects governance.
+Estates function as **special interest groups within a country** that provide
+taxation, army levies, and naval support. Each character in your nation belongs
+to one estate, creating a complex social structure that affects governance.
 
 **Estate names vary** based on:
+
 - Government type
 - Culture
 - Religion
@@ -28,22 +32,26 @@ EU5 features seven distinct estate categories:
 
 ### 1. Estate Power
 
-**Definition**: "Political strength within government and how much influence the estate has when debating parliament."
+**Definition**: "Political strength within government and how much influence the
+estate has when debating parliament."
 
 **Effects by Power Level**:
 
 **Below 25% Power**:
+
 - Grants scaling tax bonuses
 - Estate has minimal political influence
 - Crown maintains strong control
 
 **Above 25% Power**:
+
 - Provides different bonuses
 - Reduces maximum tax revenue
 - Estate gains political leverage
 - Can oppose government policies
 
-**Strategic Balance**: Manage estate power to maximize benefits while maintaining control.
+**Strategic Balance**: Manage estate power to maximize benefits while
+maintaining control.
 
 ### 2. Estate Satisfaction
 
@@ -52,30 +60,36 @@ EU5 features seven distinct estate categories:
 **Satisfaction Levels**:
 
 **Above 50% Satisfaction**:
+
 - Country gains bonuses
 - Estate provides full support
 - Levies and taxes maximized
 - Positive effects on stability
 
 **Below 50% Satisfaction**:
+
 - Country receives penalties
 - Reduced cooperation
 - Lower levy availability
 - Risk of internal conflict
 
 **Below 25% Satisfaction** (Critical):
+
 - **Levies become unavailable**
 - Severe penalties applied
 - Risk of rebellion
 - Immediate action required
 
-**Satisfaction Equilibrium**: The value estates naturally drift toward over time. Estates gradually move toward their equilibrium satisfaction level unless actively managed.
+**Satisfaction Equilibrium**: The value estates naturally drift toward over
+time. Estates gradually move toward their equilibrium satisfaction level unless
+actively managed.
 
 ### 3. Estate Opinion
 
 **Definition**: Each estate's stance toward other countries.
 
 **Effects**:
+
 - Influences diplomatic preferences
 - Affects hostility decisions
 - Can pressure government toward certain foreign policies
@@ -83,17 +97,23 @@ EU5 features seven distinct estate categories:
 
 ## Estate Privileges
 
-Non-Crown estates may receive privileges to increase their satisfaction and power.
+Non-Crown estates may receive privileges to increase their satisfaction and
+power.
 
 ### Privilege Mechanics
 
 **Granting Privileges**:
+
 - **Cost**: 5 Government Power per privilege
-- **Satisfaction Increase**: Equal to **3× the Satisfaction Equilibrium** provided by privilege
+- **Satisfaction Increase**: Equal to **3× the Satisfaction Equilibrium**
+
+  provided by privilege
+
 - **Power Increase**: Grants additional estate power
 - **Bonuses**: Various benefits depending on privilege type
 
 **Revoking Privileges**:
+
 - **Cost**: 4 Stability per 1% estate power
 - Extremely expensive for powerful estates
 - Only revoke when necessary
@@ -102,12 +122,14 @@ Non-Crown estates may receive privileges to increase their satisfaction and powe
 ### Privilege Strategy
 
 **When to Grant**:
+
 - Estate satisfaction is critically low
 - Need specific bonuses from privilege
 - Building long-term relationship with estate
 - Have government power to spare
 
 **What to Avoid**:
+
 - Over-granting privileges (hard to revoke)
 - Giving privileges to already powerful estates
 - Granting without considering long-term consequences
@@ -120,11 +142,13 @@ The Crown represents **government power without population**.
 ### Crown Mechanics
 
 **Crown Power Scaling**:
+
 - Scales with country population
 - Increases with ruler's administrative ability
 - Represents centralized government authority
 
 **Crown Benefits**:
+
 - Provides reforms instead of privileges
 - Strengthens central administration
 - Increases cabinet efficiency when powerful
@@ -132,11 +156,13 @@ The Crown represents **government power without population**.
 **Crown Power Effects**:
 
 **Below 25% Crown Power**:
+
 - Government penalties
 - Weak central authority
 - Estates dominate politics
 
 **Above 25% Crown Power**:
+
 - Government bonuses
 - **Cabinet efficiency increases**
 - Strong centralized control
@@ -145,12 +171,14 @@ The Crown represents **government power without population**.
 ### Balancing Crown vs. Estates
 
 **Strong Crown** (Centralized):
+
 - Better government efficiency
 - Faster reforms
 - More control over policy
 - Lower estate satisfaction
 
 **Strong Estates** (Decentralized):
+
 - Higher estate satisfaction
 - Better levy support
 - Estate-specific bonuses
@@ -163,6 +191,7 @@ Pops are individual population units with distinct characteristics:
 ### Pop Attributes
 
 Each pop has:
+
 - **Culture**: Determines cultural identity and acceptance
 - **Religion**: Affects tolerance and conversion
 - **Social Class**: Determines which estate they belong to
@@ -172,12 +201,14 @@ Each pop has:
 ### Pop Behavior
 
 **Population Growth**:
+
 - Depends on food security
 - Affected by housing availability
 - Influenced by prosperity
 - Modified by stability and health
 
 **Migration**:
+
 - Pops move from low-attraction to high-attraction areas
 - Prefer nearby locations
 - Follow legal restrictions
@@ -185,6 +216,7 @@ Each pop has:
 - Stay within your market region
 
 **Conversion & Assimilation**:
+
 - Pops gradually convert to state religion
 - Pops assimilate to dominant culture
 - Speed affected by policies and tolerance

@@ -1,10 +1,12 @@
 # EU5 Government Mechanics
 
-This document provides a comprehensive overview of government systems in Europa Universalis 5, based on information from the official Paradox Wiki.
+This document provides a comprehensive overview of government systems in Europa
+Universalis 5, based on information from the official Paradox Wiki.
 
 ## Government Types
 
-EU5 features five distinct government types, each with unique mechanics and power resources:
+EU5 features five distinct government types, each with unique mechanics and
+power resources:
 
 ### Monarchy
 
@@ -71,20 +73,25 @@ EU5 features five distinct government types, each with unique mechanics and powe
 Countries can shift between government types under specific conditions:
 
 **Requirements**:
+
 - Country must be at peace
 - No active disasters
 
 **Cost**:
+
 - **50 Stability**
 - **25 Government Power**
 
 **Reformation Paths**:
+
 - **Tribes and Hordes**: Can only reform into monarchies
 - **Monarchies, Republics, Theocracies**: Can transition among themselves
 
 ## Societal Values System
 
-Countries progress along **17 societal value axes**, each with two opposing poles on a 0-100 scale. These values shape government capabilities and national character.
+Countries progress along **17 societal value axes**, each with two opposing
+poles on a 0-100 scale. These values shape government capabilities and national
+character.
 
 ### Key Societal Value Axes
 
@@ -130,9 +137,11 @@ Countries progress along **17 societal value axes**, each with two opposing pole
 ### Special Regional Axes
 
 **Islamic Nations**:
+
 - **Mysticism-Jurisprudence Axis**: Balances religious interpretation approaches
 
 **Non-Chinese Rulers in Asia**:
+
 - **Sinicized-Unsinicized Axis**: Measures cultural adoption of Chinese customs
 
 ## Cabinet System
@@ -152,10 +161,12 @@ The Cabinet system allows delegation of government tasks to trusted officials.
 **Availability**: Not available for tribes
 
 **Appointment Cost**:
+
 - Substantial gold
 - **5 Government Power**
 
 **Effects**:
+
 - Increases cabinet efficiency by **+25%**
 - Prevents that member from commanding armies
 - Cannot be removed once appointed
@@ -169,7 +180,8 @@ The Cabinet system allows delegation of government tasks to trusted officials.
 
 ## Regency Mechanics
 
-Regencies activate when rulers die without adult heirs. The system follows a strict hierarchy determining regent type.
+Regencies activate when rulers die without adult heirs. The system follows a
+strict hierarchy determining regent type.
 
 ### Regency Type Hierarchy
 
@@ -188,9 +200,13 @@ The game checks for regents in this order:
 ### Regency Effects
 
 Each regency type produces distinct effects:
+
 - **Stability changes**: Some regencies cause instability
 - **Estate satisfaction shifts**: Affects which estates benefit or lose power
-- **Societal values development**: Different regencies push values in different directions
+- **Societal values development**: Different regencies push values in different
+
+  directions
+
 - **Duration**: Varies by type until heir comes of age
 
 ### Managing Regencies
@@ -206,15 +222,27 @@ Each government type generates and uses government power differently:
 
 ### Power Generation
 
-- **Monarchy (Legitimacy)**: Generated through dynasty strength, royal marriages, and stable succession
-- **Republic (Republican Tradition)**: Generated through elections and civic institutions
+- **Monarchy (Legitimacy)**: Generated through dynasty strength, royal
+
+  marriages, and stable succession
+
+- **Republic (Republican Tradition)**: Generated through elections and civic
+
+  institutions
+
 - **Theocracy (Devotion)**: Generated through religious authority and piety
-- **Tribe (Tribal Cohesion)**: Generated through kinship ties and traditional authority
-- **Steppe Horde (Horde Unity)**: Generated through military success and conquest
+- **Tribe (Tribal Cohesion)**: Generated through kinship ties and traditional
+
+  authority
+
+- **Steppe Horde (Horde Unity)**: Generated through military success and
+
+  conquest
 
 ### Power Uses
 
 Government power is spent on:
+
 - Appointing cabinet members (5 Government Power for Head of Cabinet)
 - Enacting reforms
 - Granting estate privileges (5 Government Power per privilege)
@@ -247,4 +275,5 @@ Government power is spent on:
 
 ## References
 
-[1] [Government - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Government)
+[1] [Government - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Government)

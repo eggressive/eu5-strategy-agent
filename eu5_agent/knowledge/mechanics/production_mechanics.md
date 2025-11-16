@@ -1,19 +1,24 @@
 # EU5 Production Mechanics
 
-This document provides a comprehensive overview of production, buildings, and resource management in Europa Universalis 5.
+This document provides a comprehensive overview of production, buildings, and
+resource management in Europa Universalis 5.
 
 ## Buildings Overview
 
-Buildings in EU5 serve diverse functions, from manufacturing goods to unlocking specialized military units. Building productivity depends directly on how many pops (population units) are employed within them.
+Buildings in EU5 serve diverse functions, from manufacturing goods to unlocking
+specialized military units. Building productivity depends directly on how many
+pops (population units) are employed within them.
 
 ### Production Methods
 
-**Each building has one or more Production Methods**, which determine:
+Each building has one or more Production Methods, which determine:
+
 - **Input**: What goods/resources the building consumes
 - **Output**: What goods/resources the building produces
 - **Employment**: How many pops are needed for full efficiency
 
-Production methods can be changed to adapt to different economic needs and resource availability.
+Production methods can be changed to adapt to different economic needs and resource
+availability.
 
 ## Construction Mechanics
 
@@ -31,12 +36,14 @@ Base gold costs for construction vary by technological age:
 | Age of Revolutions | 1200 gold |
 
 **Special Cases**:
+
 - Some buildings cost **4x their standard age price**
 - Other buildings use predefined fixed amounts
 
 ### Resource Requirements
 
 Construction also requires specific goods beyond gold:
+
 - **If not enough goods are supplied, construction will pause**
 - Resources must be available in your market
 - Ensure market capacity and trade routes support construction needs
@@ -53,9 +60,11 @@ Construction also requires specific goods beyond gold:
 
 ### Location Capacity
 
-Each location has a **Building Levels cap** determining how many structures can operate efficiently.
+Each location has a **Building Levels cap** determining how many structures can
+operate efficiently.
 
 **Exceeding Capacity**:
+
 - Each building level above capacity increases costs by **+5%**
 - Penalties compound for multiple excess buildings
 - Plan expansion carefully to avoid cost increases
@@ -72,7 +81,8 @@ Building capacity increases from:
 | Capital status | **+5** |
 | Market center designation | **+5** |
 
-**Strategic Implication**: Develop locations and promote to cities to support more buildings.
+**Strategic Implication**: Develop locations and promote to cities to support more
+buildings.
 
 ## Employment & Workforce
 
@@ -81,8 +91,14 @@ Building capacity increases from:
 Four employment systems determine worker allocation to buildings:
 
 1. **Equality**: Jobs distributed equally across all buildings
-2. **Most Profitable First**: Prioritizes staffing the most profitable buildings first
-3. **Infrastructure, then Most Profitable**: Infrastructure buildings staffed first, then by profitability
+2. **Most Profitable First**: Prioritizes staffing the most profitable buildings
+
+   first
+
+3. **Infrastructure, then Most Profitable**: Infrastructure buildings staffed
+
+   first, then by profitability
+
 4. **Custom**: Manual control over employment priorities
 
 **Each employment system affects ideological development** of your nation.
@@ -95,7 +111,8 @@ Four employment systems determine worker allocation to buildings:
 
 ### Building Subsidies
 
-**The country can choose to give the building Subsidies**, which will:
+The country can choose to give the building subsidies, which will:
+
 - Prevent firing of employees even when unprofitable
 - Maintain employment for strategic buildings
 - Cost ongoing gold to maintain
@@ -104,20 +121,24 @@ Four employment systems determine worker allocation to buildings:
 ### Staffing Strategy
 
 **Critical Mistake**: Building more structures than you have workers
+
 - Unstaffed buildings produce nothing
 - Waste gold on maintenance for idle buildings
 - **Solution**: **Food → Housing → Jobs** sequence
-  1. Ensure pops have food
-  2. Provide housing
-  3. Then build production buildings
+  - Ensure pops have food
+  - Provide housing
+  - Then build production buildings
 
-**Best Practice**: Fill existing buildings to full capacity before constructing new ones.
+**Best Practice**: Fill existing buildings to full capacity before constructing new
+ones.
 
 ## Building Management
 
 ### Autonomous Construction
 
-**Estates construct buildings autonomously** and player cannot override these decisions:
+**Estates construct buildings autonomously** and player cannot override these
+decisions:
+
 - Estates build according to their interests
 - Nobility builds military and administrative buildings
 - Burghers build economic and trade buildings
@@ -133,6 +154,7 @@ Four employment systems determine worker allocation to buildings:
 ### Construction Automation
 
 Available automation options:
+
 - **Automated construction** with customizable gold thresholds
 - Set maximum spending per construction project
 - Enable/disable automation by building type
@@ -166,14 +188,18 @@ Building efficiency depends on:
 
 ### Profitability
 
-**Profitability = Output Value - Input Costs - Labor Costs**
+#### Profitability Formula
+
+Output Value - Input Costs - Labor Costs
 
 Buildings are profitable when:
+
 - Output goods value exceeds input costs
 - Market prices favor production
 - Efficient staffing levels maintained
 
 Unprofitable buildings:
+
 - Begin firing workers
 - Should be given subsidies or closed
 - May need production method change
@@ -212,6 +238,7 @@ Infrastructure buildings don't produce goods directly but provide bonuses:
 ### Infrastructure Strategy
 
 **Priority**: Infrastructure should be built **before** production buildings:
+
 - Marketplaces enable trade capacity for imports/exports
 - Roads improve army movement and trade
 - Ports essential for naval nations
@@ -244,9 +271,14 @@ Infrastructure buildings don't produce goods directly but provide bonuses:
 
 1. **Overbuilding**: More buildings than workers to staff them
 2. **Ignoring Inputs**: Building production without securing input supplies
-3. **Neglecting Infrastructure**: Production buildings without supporting infrastructure
+3. **Neglecting Infrastructure**: Production buildings without supporting
+
+   infrastructure
+
 4. **Exceeding Capacity**: Building beyond location capacity, increasing costs
-5. **Wrong Employment System**: Using system that doesn't match your economic strategy
+5. **Wrong Employment System**: Using system that doesn't match your economic
+
+   strategy
 
 ## Automation Best Practices
 
@@ -258,5 +290,7 @@ Infrastructure buildings don't produce goods directly but provide bonuses:
 
 ## References
 
-[1] [Building - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Building)
-[2] [Common Buildings - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Common_buildings)
+[1] [Building - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Building)
+[2] [Common Buildings - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Common_buildings)

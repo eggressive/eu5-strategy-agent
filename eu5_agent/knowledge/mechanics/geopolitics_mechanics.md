@@ -1,22 +1,28 @@
 # EU5 Geopolitics Mechanics
 
-This document provides a comprehensive overview of geopolitical systems in Europa Universalis 5, including markets, claims, cores, colonization, and great power dynamics.
+This document provides a comprehensive overview of geopolitical systems in
+Europa Universalis 5, including markets, claims, cores, colonization, and great
+power dynamics.
 
 ## Market System
 
-EU5 replaces the static trade node system from EU4 with **dynamic, interconnected local and regional markets**.
+EU5 replaces the static trade node system from EU4 with **dynamic,
+interconnected local and regional markets**.
 
 ### Market Fundamentals
 
-**Definition**: A Market is an economic zone where goods are bought and sold, named after a Market Center but extending into multiple locations.
+**Definition**: A Market is an economic zone where goods are bought and sold,
+named after a Market Center but extending into multiple locations.
 
 **Market Centers**:
+
 - Central hub for market economic activity
 - Connects multiple locations through trade
 - Named location determines market identity
 - Can be upgraded through development and buildings
 
 **Market Mechanics**:
+
 - Multiple nations can participate in the same market
 - Locations trade exclusively with their assigned market
 - Market assignment based on two competing forces:
@@ -26,6 +32,7 @@ EU5 replaces the static trade node system from EU4 with **dynamic, interconnecte
 ### Market vs. EU4 Trade Nodes
 
 **Key Differences**:
+
 - Markets are **dynamic** and can shift boundaries
 - Based on **distance, infrastructure, and population**
 - Interconnected across regions, not fixed paths
@@ -33,6 +40,7 @@ EU5 replaces the static trade node system from EU4 with **dynamic, interconnecte
 - Markets respond to player development choices
 
 **Strategic Implications**:
+
 - Develop Market Centers to attract more locations
 - Build infrastructure (roads, marketplaces) to expand influence
 - Compete with neighbors for market control
@@ -41,6 +49,7 @@ EU5 replaces the static trade node system from EU4 with **dynamic, interconnecte
 ### Market Integration
 
 Markets are deeply integrated with:
+
 - **Population System**: Each pop buys and sells in markets
 - **Buildings**: Marketplaces increase market capacity
 - **Trade Routes**: Connect distant markets
@@ -48,13 +57,15 @@ Markets are deeply integrated with:
 
 ## Claims & Casus Belli System
 
-EU5 has **eliminated the traditional claims system**, replacing it entirely with Casus Belli (CBs).
+EU5 has **eliminated the traditional claims system**, replacing it entirely with
+Casus Belli (CBs).
 
 ### Casus Belli Overview
 
 **Definition**: Legal justification for declaring war and seizing territory.
 
 **Major Change from EU4**:
+
 - No more fabricating claims through diplomats
 - No permanent claims on map
 - All expansion requires specific CBs
@@ -65,18 +76,21 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 #### 1. Parliament Motions
 
 **Process**:
+
 - Every 5 years, call Parliament
 - Propose a motion for war against specific nation
 - Requires support from over 50% of Parliament
 - Success depends on estate satisfaction
 
 **Parliament Voting**:
+
 - Each estate votes based on their interests
 - High satisfaction estates more likely to support
 - Strategic estates may oppose certain wars
 - Requires political management
 
 **Result**:
+
 - Temporary CB granted if motion passes
 - Specific to the nation targeted
 - Expires if not used within time limit
@@ -84,17 +98,20 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 #### 2. Spy Networks
 
 **Requirements**:
+
 - Build Spy Network to 20 progress
 - Costs espionage resources
 - Takes time to establish
 
 **Process**:
+
 1. Click on target nation
 2. Select "Build Spy Network" under Covert Actions
 3. Wait for 20 progress
 4. Unlock CB options
 
 **Available CBs at 20 Spy Network**:
+
 - **Conquest**: General territorial expansion
 - **Humiliation**: Reduce target's prestige and power
 - **Religious War**: Convert or seize land from different religion
@@ -105,12 +122,14 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 #### 3. Events and Situations
 
 **Dynamic CBs**:
+
 - Granted through historical events
 - Tied to major storylines and missions
 - Example: "Rise of the Turks" situation grants specific CBs
 - Often tied to specific regions or rivals
 
 **Advantages**:
+
 - Free CBs without player effort
 - Often powerful and wide-ranging
 - Tied to historical opportunities
@@ -119,12 +138,14 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 ### Casus Belli Mechanics
 
 **Expiration**:
+
 - Most CBs expire after **4 years**
 - Use or lose your justification
 - Plan wars around CB availability
 - Some event CBs may have different timers
 
 **Declaring War Without CB**:
+
 - Always possible but heavily penalized
 - Costs **+50 Stability**
 - Grants **+1 War Exhaustion**
@@ -134,18 +155,21 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 ### CB Strategy
 
 **Early Game**:
+
 - Rely on Parliament motions
 - Keep estates satisfied for CB approval
 - Use event CBs when available
 - Avoid war without CB (stability too valuable)
 
 **Mid Game**:
+
 - Build spy networks for targeted expansion
 - Chain CBs to maintain continuous expansion
 - Use reconquest CBs for former territory
 - Balance CB acquisition with war timing
 
 **Late Game**:
+
 - Multiple spy networks simultaneously
 - Leverage situations for free CBs
 - Plan expansion routes around CB availability
@@ -158,12 +182,14 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 **Definition**: Provinces that your nation has historical/legal claim to.
 
 **Core Mechanics**:
+
 - Former territories you once controlled
 - Can be reconquered with special CB
 - Reconquest CB only available through Spy Network
 - Reduces antagonism compared to conquest
 
 **Reconquest Benefits**:
+
 - Lower antagonism generation
 - Faster integration
 - Less coalition risk
@@ -172,18 +198,21 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 ### Control System
 
 **Control represents authority over a province**:
+
 - Higher control = more manpower contribution
 - Increases recruitment efficiency
 - Improves tax collection
 - Reduces unrest
 
 **Increasing Control**:
+
 - Time in peaceful province
 - Administrative buildings
 - Government policies
 - Stationed armies (temporary boost)
 
 **Control Loss**:
+
 - Enemy occupation during war
 - Rebellions and unrest
 - Recent conquest
@@ -191,13 +220,16 @@ EU5 has **eliminated the traditional claims system**, replacing it entirely with
 
 ## Colonial Mechanics
 
-EU5 features a completely redesigned colonization system emphasizing population migration and power projection.
+EU5 features a completely redesigned colonization system emphasizing population
+migration and power projection.
 
 ### Colonial Charters
 
-**Definition**: Colonial charters send your own population to a province to establish a colony.
+**Definition**: Colonial charters send your own population to a province to
+establish a colony.
 
 **How Charters Work**:
+
 1. Select target province within colonial range
 2. Initiate colony charter
 3. Pops migrate from your nation to colony
@@ -205,6 +237,7 @@ EU5 features a completely redesigned colonization system emphasizing population 
 5. At 1,000 population, colony becomes self-sustaining
 
 **Colonial Range**:
+
 - Each country has limited colonial range
 - Based on naval technology
 - Extended by:
@@ -216,17 +249,20 @@ EU5 features a completely redesigned colonization system emphasizing population 
 ### Colony Growth
 
 **Population Migration**:
+
 - Colonies grow **only through migration** of existing pops
 - Natural growth once established
 - Requires pops willing to migrate
 
 **Support Colonial Charter Action**:
+
 - Manually move pops to colonies
 - Speeds up colonization
 - Costs government power
 - Useful for strategic colonies
 
 **Self-Sustaining Threshold**:
+
 - **1,000 population** required
 - Colony joins your trade network
 - Begins contributing to economy
@@ -235,16 +271,19 @@ EU5 features a completely redesigned colonization system emphasizing population 
 ### Colonial Competition
 
 **Simultaneous Colonization**:
+
 - Multiple countries can colonize same province
 - First to complete process wins the province
 - Loser suffers penalties
 
 **Loser Penalties**:
+
 - Lose **Prestige**, **Gold**, or **Government Power**
 - Penalty is whichever resource is highest
 - Significant setback to colonial efforts
 
 **Strategic Implications**:
+
 - Race to colonize valuable provinces
 - Use Support Colonial Charter to win races
 - Avoid competing with stronger colonial powers
@@ -253,18 +292,21 @@ EU5 features a completely redesigned colonization system emphasizing population 
 ### Power Projection & Colonization
 
 **Colonial Buildings in Foreign Territory**:
+
 - Build trade offices in locations owned by weaker nations
 - Establish colonies in their territory
 - Create slave centers (historical context)
 - Build missions and other specific structures
 
 **Power Projection Advantage**:
+
 - Greater power projection difference = faster colonial charter takeover
 - Can take control of locations from weaker nations
 - Each point of power projection reduces colonization requirements by **0.5%**
 - Reduces percentage of primary religion/culture pops needed
 
 **Colonization Completion Requirements**:
+
 - Normally requires majority pops of primary religion and culture
 - Power projection reduces this percentage
 - 100 power projection advantage = 50% reduction in requirements
@@ -273,18 +315,21 @@ EU5 features a completely redesigned colonization system emphasizing population 
 ### Colonial Strategy
 
 **Early Colonization**:
+
 - Establish colonial range through naval bases
 - Target uncontested regions
 - Avoid competition with major powers
 - Focus on trade-rich provinces
 
 **Mid-Game Expansion**:
+
 - Use power projection to compete
 - Support colonial charters in valuable regions
 - Establish trade networks
 - Build colonial infrastructure
 
 **Late-Game Dominance**:
+
 - Leverage power projection to take over weaker colonies
 - Establish global trade empire
 - Use colonies for resources and trade
@@ -292,17 +337,20 @@ EU5 features a completely redesigned colonization system emphasizing population 
 
 ## Power Projection
 
-**Power Projection** represents your nation's ability to exert influence beyond your borders.
+**Power Projection** represents your nation's ability to exert influence beyond
+your borders.
 
 ### Power Projection Effects
 
 **Colonial Advantages**:
+
 - Build special buildings in weaker nations' territory
 - Faster colonial charter takeover
 - Reduced colonization requirements (-0.5% per point)
 - Competitive advantage in colonial races
 
 **Diplomatic Influence**:
+
 - Greater bargaining power
 - Easier to enforce demands
 - Intimidation factor in negotiations
@@ -311,6 +359,7 @@ EU5 features a completely redesigned colonization system emphasizing population 
 ### Increasing Power Projection
 
 **Methods** (not fully documented, likely includes):
+
 - Large navy relative to rivals
 - Colonial presence
 - Controlling strategic trade routes
@@ -325,6 +374,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Great Power Score Calculation
 
 **Great Power Score Components**:
+
 - **Population**: Larger population increases score
 - **Income**: Economic strength matters
 - **Advances**: Technological and ideological progress
@@ -339,17 +389,20 @@ The **9 countries with highest Great Power Score** become Great Powers.
 - **Discipline**: Army quality
 - **War Exhaustion**: Penalties for ongoing conflicts (negative factor)
 
-**Balanced Calculation**: Great Power Score rewards well-rounded nations, not just military strength.
+**Balanced Calculation**: Great Power Score rewards well-rounded nations, not
+just military strength.
 
 ### Great Power Benefits
 
 **Special Diplomatic Actions**:
+
 - **Intervene in Wars**: Join ongoing conflicts without being called
 - **Enforce Peace**: Force warring nations to negotiate
 - **Threaten War**: Coerce smaller nations without fighting
 - **Additional Benefits**: Prestige bonuses, diplomatic advantages
 
 **Great Power Privileges**:
+
 - More influence in international organizations
 - Greater diplomatic capacity
 - Enhanced power projection
@@ -358,12 +411,14 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Subject Integration
 
 **Subjects Transfer Great Power Score**:
+
 - Percentage transferred depends on subject type
 - Vassals transfer significant portion
 - Colonial subjects transfer less
 - Personal unions transfer moderate amounts
 
 **Subject Restriction**:
+
 - Subjects **cannot become Great Powers**
 - Their score contributes to overlord
 - Prevents vassals from competing with overlord
@@ -372,6 +427,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Great Power Strategy
 
 **Becoming a Great Power**:
+
 - Balance all components (not just military)
 - Develop economy and population
 - Maintain stability and prestige
@@ -379,6 +435,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 - Invest in navy and army quality
 
 **Maintaining Great Power Status**:
+
 - Avoid high war exhaustion
 - Continue technological advancement
 - Expand markets and trade
@@ -386,6 +443,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 - Maintain strong military
 
 **Using Great Power Actions**:
+
 - Intervene to support allies
 - Enforce peace to prevent coalitions
 - Threaten rivals without war costs
@@ -396,12 +454,14 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Market Control
 
 **Economic Dominance**:
+
 - Control key Market Centers
 - Build infrastructure to expand market influence
 - Compete for market control with neighbors
 - Markets = trade income = economic power
 
 **Market Competition**:
+
 - Defend your markets from foreign influence
 - Use Market Protection policies strategically
 - Attract locations through development
@@ -410,6 +470,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Expansion Planning
 
 **CB Acquisition Timeline**:
+
 - Plan wars around CB availability
 - Chain CBs for continuous expansion
 - Use Parliament every 5 years
@@ -417,6 +478,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 - Leverage event CBs immediately
 
 **Expansion Pacing**:
+
 - Balance expansion with antagonism
 - Use reconquest CBs when available
 - Avoid unjustified wars (stability cost)
@@ -425,6 +487,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Colonial Empire Building
 
 **Prioritize**:
+
 1. Establish colonial range
 2. Target high-value trade regions
 3. Build power projection advantage
@@ -432,6 +495,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 5. Develop self-sustaining colonies
 
 **Avoid**:
+
 - Competing with stronger colonial powers early
 - Over-extending colonial range
 - Neglecting colony development
@@ -440,6 +504,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ### Great Power Competition
 
 **Climbing the Ranks**:
+
 - Focus on weakest score components
 - Balance military and economic power
 - Maintain high stability
@@ -447,6 +512,7 @@ The **9 countries with highest Great Power Score** become Great Powers.
 - Build diverse power base
 
 **Maintaining Position**:
+
 - Monitor rivals' Great Power Score
 - Prevent competitors from catching up
 - Use Great Power actions strategically
@@ -454,14 +520,37 @@ The **9 countries with highest Great Power Score** become Great Powers.
 
 ## Common Pitfalls
 
-1. **Ignoring Market Competition**: Losing market control to neighbors reduces trade income
-2. **Declaring War Without CB**: Massive stability penalty not worth it in most cases
-3. **Letting CBs Expire**: Waste of effort building spy networks or passing Parliament motions
-4. **Colonial Over-Extension**: Colonies too far from range or too many simultaneous charters
-5. **Neglecting Power Projection**: Losing colonial competition to higher power projection nations
-6. **Unbalanced Great Power Score**: Focusing only on military while neglecting economy/population
-7. **Subject Mismanagement**: Not leveraging subject Great Power Score contribution
-8. **Market Over-Protection**: Isolating your markets reduces trade opportunities
+1. **Ignoring Market Competition**: Losing market control to neighbors reduces
+
+   trade income
+
+2. **Declaring War Without CB**: Massive stability penalty not worth it in most
+
+   cases
+
+3. **Letting CBs Expire**: Waste of effort building spy networks or passing
+
+   Parliament motions
+
+4. **Colonial Over-Extension**: Colonies too far from range or too many
+
+   simultaneous charters
+
+5. **Neglecting Power Projection**: Losing colonial competition to higher power
+
+   projection nations
+
+6. **Unbalanced Great Power Score**: Focusing only on military while neglecting
+
+   economy/population
+
+7. **Subject Mismanagement**: Not leveraging subject Great Power Score
+
+   contribution
+
+8. **Market Over-Protection**: Isolating your markets reduces trade
+
+   opportunities
 
 ## Integration with Other Systems
 
@@ -489,6 +578,8 @@ The **9 countries with highest Great Power Score** become Great Powers.
 ## References
 
 [1] [Market - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Market)
-[2] [Diplomacy - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Diplomacy)
-[3] [Exploration - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Exploration)
+[2] [Diplomacy - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Diplomacy)
+[3] [Exploration - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Exploration)
 [4] [Country - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Country)

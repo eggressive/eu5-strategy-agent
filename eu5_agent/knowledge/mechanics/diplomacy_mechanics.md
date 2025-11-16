@@ -1,32 +1,38 @@
 # EU5 Diplomacy Mechanics
 
-This document provides a comprehensive overview of diplomatic systems in Europa Universalis 5.
+This document provides a comprehensive overview of diplomatic systems in Europa
+Universalis 5.
 
 ## Core Diplomacy Concepts
 
 ### Diplomatic Capacity
 
-**Diplomatic capacity dictates how many relations a country can have with another country.**
+**Diplomatic capacity dictates how many relations a country can have with
+another country.**
 
 **Capacity Costs Determined By**:
+
 - Population difference between countries
 - Rank difference (Great Power vs. Minor Nation)
 - Opinion between countries
 - Trust level (reduces costs)
 
-**Strategic Implication**: Build trust to reduce capacity costs and maintain more relationships.
+**Strategic Implication**: Build trust to reduce capacity costs and maintain
+more relationships.
 
 ### Diplomatic Reputation
 
 **Diplomatic Reputation reflects how other nations view your reliability.**
 
 **Benefits of High Reputation**:
+
 - Easier to form alliances
 - Better vassalization opportunities
 - More favorable peace agreements
 - Improved trust building
 
 **Reputation Increases From**:
+
 - Government reforms
 - Laws and policies
 - Technological advances
@@ -34,6 +40,7 @@ This document provides a comprehensive overview of diplomatic systems in Europa 
 - Honoring commitments
 
 **Reputation Decreases From**:
+
 - Breaking alliances
 - Violating truces
 - Dishonoring commitments
@@ -41,11 +48,13 @@ This document provides a comprehensive overview of diplomatic systems in Europa 
 
 ## The Favor System
 
-The favor system forms the backbone of EU5's diplomatic interactions, replacing simpler relationship modifiers from previous games.
+The favor system forms the backbone of EU5's diplomatic interactions, replacing
+simpler relationship modifiers from previous games.
 
 ### Earning Favors
 
 **Favors Accumulate Through**:
+
 - Sending gifts
 - Providing military support
 - Honoring alliance calls
@@ -55,6 +64,7 @@ The favor system forms the backbone of EU5's diplomatic interactions, replacing 
 ### Using Favors
 
 Favors become your **diplomatic currency** for:
+
 - Requesting military support
 - Calling allies into wars
 - Asking for diplomatic favors
@@ -64,6 +74,7 @@ Favors become your **diplomatic currency** for:
 ### Favor Transfers
 
 **Favors can transfer between nations**:
+
 - If France sends you financial aid, favors transfer back to France
 - Creates diplomatic debt
 - Influences future relationships
@@ -78,12 +89,14 @@ Favors become your **diplomatic currency** for:
 **Opinion** represents how one country views another on a -200 to +200 scale.
 
 **High Opinion** (Positive):
+
 - Easier diplomatic actions
 - Alliance formation possible
 - Trade agreements favorable
 - Military access granted
 
 **Low Opinion** (Negative):
+
 - Difficult diplomacy
 - Potential rivalry
 - Hostile actions likely
@@ -91,28 +104,33 @@ Favors become your **diplomatic currency** for:
 
 ### Trust
 
-**Trust** is a shared measure between two countries showing **how much they believe in your promises**.
+**Trust** is a shared measure between two countries showing **how much they
+believe in your promises**.
 
 **Trust Growth**:
+
 - Honoring alliance calls
 - Keeping agreements
 - Long-term friendly relations
 - Shared diplomatic goals
 
 **Trust Benefits**:
+
 - Reduced diplomatic capacity costs
 - Stronger alliances
 - Better cooperation
 - More favorable agreements
 
 **Trust Penalties**:
+
 - Breaking alliances
 - Violating agreements
 - Dishonoring commitments
 
 ## Rivalries
 
-**Countries can declare their hostility towards other countries by declaring them as rivals.**
+**Countries can declare their hostility towards other countries by declaring
+them as rivals.**
 
 ### Rivalry Requirements
 
@@ -123,13 +141,18 @@ Favors become your **diplomatic currency** for:
 ### Rivalry Benefits
 
 **Additional Hostile Actions**:
+
 - Fabricate Casus Belli against rivals
 - Intervene in rival's wars
 - Support rival's enemies
 - Embargo rival trade
 
 **Shared Rivalry Bonus**:
-- **If two countries have the same rival, they gain +50 Opinion** with each other
+
+- **If two countries have the same rival, they gain +50 Opinion** with each
+
+  other
+
 - Facilitates alliance formation
 - Creates natural diplomatic blocs
 - "The enemy of my enemy is my friend"
@@ -137,12 +160,14 @@ Favors become your **diplomatic currency** for:
 ### Rivalry Strategy
 
 **When to Rival**:
+
 - Natural competitors for territory
 - Blocking your expansion
 - Threatening your interests
 - Potential future conflicts
 
 **Rivalry Risks**:
+
 - Can trigger coalition formation
 - Complicates diplomacy
 - Locks in hostile relationship
@@ -152,22 +177,28 @@ Favors become your **diplomatic currency** for:
 
 ### The Antagonism System
 
-**Antagonism replaces EU4's "Aggressive Expansion"** with more nuanced geopolitical concern.
+**Antagonism replaces EU4's "Aggressive Expansion"** with more nuanced
+geopolitical concern.
 
 **Key Antagonism Factors**:
 
 1. **Proximity**: Neighbors care most about your actions
 2. **Culture & Faith**: Shared identities intensify reactions
-3. **Strategic Interests**: Overlapping claims or trade routes increase antagonism
+3. **Strategic Interests**: Overlapping claims or trade routes increase
+
+   antagonism
+
 4. **Alliances**: Friends of your victims turn hostile
 
 **Antagonism is NOT a flat penalty**—it reflects real geopolitical concerns.
 
 ### Coalition Formation
 
-**Coalition Trigger**: If a country has more than **50 Antagonism**, coalitions can form against it.
+**Coalition Trigger**: If a country has more than **50 Antagonism**, coalitions
+can form against it.
 
 **Coalition Mechanics**:
+
 - No longer automatic "join if AE > 50"
 - Form based on **strategic proximity** and **mutual interests**
 - Operate with realistic constraints
@@ -175,6 +206,7 @@ Favors become your **diplomatic currency** for:
 - Geographic and political limitations apply
 
 **Coalition Behavior**:
+
 - Defensive alliance against aggressive nation
 - Can declare war collectively
 - Deterrent to rapid expansion
@@ -183,6 +215,7 @@ Favors become your **diplomatic currency** for:
 ### Managing Antagonism
 
 **Reduce Antagonism By**:
+
 - Time passage (natural decay)
 - Improving relations
 - Return conquered cores
@@ -190,6 +223,7 @@ Favors become your **diplomatic currency** for:
 - Avoiding further aggression
 
 **Avoid Excessive Antagonism**:
+
 - Pace your expansion
 - Target nations without many allies
 - Use valid casus belli
@@ -201,12 +235,14 @@ Favors become your **diplomatic currency** for:
 ### Alliance Formation
 
 **Requirements**:
+
 - Positive opinion (typically +50 or higher)
 - Diplomatic capacity available
 - No conflicting alliances
 - Mutual strategic benefit
 
 **Alliance Benefits**:
+
 - Defensive military support
 - Call allies into offensive wars (costs favors)
 - Shared rivalry bonuses
@@ -215,12 +251,14 @@ Favors become your **diplomatic currency** for:
 ### Alliance Management
 
 **Maintaining Alliances**:
+
 - Honor alliance calls (builds trust)
 - Provide military support when able
 - Avoid actions that harm ally's interests
 - Build favors for future needs
 
 **Breaking Alliances**:
+
 - Severe reputation penalty
 - Loss of trust with all nations
 - Makes future alliances difficult
@@ -228,28 +266,33 @@ Favors become your **diplomatic currency** for:
 
 ## International Organizations
 
-**International Organizations represent EU5's most innovative diplomatic feature.**
+**International Organizations represent EU5's most innovative diplomatic
+feature.**
 
 ### Organization Types
 
 **Holy Roman Empire**:
+
 - Complex internal diplomacy
 - Emperor and princes
 - Imperial authority system
 - Reforms and elections
 
 **Personal Unions**:
+
 - Dynasty-based diplomatic ties
 - Junior partner under senior partner
 - Share wars and diplomacy
 - Can integrate over time
 
 **Colonial Empires**:
+
 - Mother country and colonies
 - Trade and economic ties
 - Graduated independence
 
 **Other Organizations**:
+
 - Regional alliances
 - Trade leagues
 - Military coalitions
@@ -283,6 +326,7 @@ Favors become your **diplomatic currency** for:
 ### Diplomatic Costs
 
 Most actions cost:
+
 - Diplomatic capacity
 - Sometimes favors
 - Potentially reputation
@@ -321,4 +365,5 @@ Most actions cost:
 
 ## References
 
-[1] [Diplomacy - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Diplomacy)
+[1] [Diplomacy - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Diplomacy)

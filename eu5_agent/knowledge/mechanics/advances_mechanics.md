@@ -1,12 +1,15 @@
 # EU5 Advances Mechanics
 
-This document provides a comprehensive overview of the advances, institutions, ages, and research systems in Europa Universalis 5.
+This document provides a comprehensive overview of the advances, institutions,
+ages, and research systems in Europa Universalis 5.
 
 ## Overview
 
-EU5 replaces the traditional EU4 technology system with a more flexible **Advances system** tied to historical ages and institutions.
+EU5 replaces the traditional EU4 technology system with a more flexible
+**Advances system** tied to historical ages and institutions.
 
 **Key Change from EU4**:
+
 - No more administrative/diplomatic/military tech levels
 - Instead: Advances within institution trees
 - Research tied to historical ages (100-year periods)
@@ -15,13 +18,15 @@ EU5 replaces the traditional EU4 technology system with a more flexible **Advanc
 
 ## Ages System
 
-Ages represent distinct periods of history, each with unique mechanics, institutions, and advance trees.
+Ages represent distinct periods of history, each with unique mechanics,
+institutions, and advance trees.
 
 ### Age Duration
 
 **Standard Length**: Most ages last **100 years**
 
-**Exception**: Age of Traditions ends after only **5 years** (on January 1st, 1342)
+**Exception**: Age of Traditions ends after only **5 years** (on January 1st,
+1342)
 
 ### Ages in EU5
 
@@ -35,6 +40,7 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 ### Age Mechanics
 
 **Each age features**:
+
 - Three unique institutions
 - Distinct advance trees
 - Age-specific rules and mechanics
@@ -42,6 +48,7 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 - Building cost scaling (affects construction)
 
 **Age Transitions**:
+
 - Automatic at end of 100-year period
 - All countries transition simultaneously
 - New institutions spawn
@@ -50,15 +57,20 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 
 ## Institutions
 
-**Institutions represent major cultural or technological paradigm shifts** that fundamentally change how societies operate.
+**Institutions represent major cultural or technological paradigm shifts** that
+fundamentally change how societies operate.
 
 ### Institution Fundamentals
 
-**Definition**: Transformative historical developments like the Renaissance or Printing Press.
+**Definition**: Transformative historical developments like the Renaissance or
+Printing Press.
 
-**Critical Importance**: Institutions are **the single most important factor** determining national progress. Falling behind on institutions can doom a nation to irrelevance.
+**Critical Importance**: Institutions are **the single most important factor**
+determining national progress. Falling behind on institutions can doom a nation
+to irrelevance.
 
 **Three Institutions Per Age**:
+
 - Each age introduces three new institutions
 - Each institution has an associated advance tree
 - Institutions must spread and be embraced
@@ -67,12 +79,17 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 ### Institution Spreading
 
 **Spawn Mechanics**:
+
 - Institutions spawn in specific locations based on criteria
-- **Example**: Renaissance institutions spawn in Italy (same culture as primary culture)
+- **Example**: Renaissance institutions spawn in Italy (same culture as primary
+
+  culture)
+
 - Cultural and geographical factors determine spawn location
 - Spreads from spawn location to nearby provinces
 
 **Spread Mechanics**:
+
 - Institutions spread gradually across the map
 - Faster spread to nearby locations
 - Cultural similarity speeds spread
@@ -81,6 +98,7 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 - Buildings can accelerate spread
 
 **Spread Percentage**:
+
 - Tracked as percentage in each province
 - 0% = institution completely absent
 - 100% = institution fully present
@@ -88,15 +106,18 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 
 ### Embracing Institutions
 
-**Embrace Threshold**: Once an institution has spread **at least 20%** in a country, it can be embraced.
+**Embrace Threshold**: Once an institution has spread **at least 20%** in a
+country, it can be embraced.
 
 **Embrace Cost**:
+
 - Scaled based on country size and development
 - Larger, more developed nations pay more
 - Earlier embrace costs less than later embrace
 - Critical investment for staying competitive
 
 **Embrace Effects**:
+
 1. **Unlocks new branch in advances tree**
 2. **Begins spreading institution from capital**
 3. **Reduces research costs** for associated advances
@@ -104,6 +125,7 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 5. **Prevents falling behind technologically**
 
 **Strategic Timing**:
+
 - Embrace too early = waste resources
 - Embrace too late = fall behind competitors
 - Ideal: Embrace at 20-30% spread
@@ -112,6 +134,7 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 ### Example: Age of Renaissance Institutions
 
 **Three Renaissance Institutions** spawn in the Age of Renaissance:
+
 - Spawn in Italy (locations with Italian culture)
 - Represent cultural and technological innovations
 - Each unlocks distinct advance tree
@@ -119,21 +142,25 @@ Ages represent distinct periods of history, each with unique mechanics, institut
 
 ## Advances System
 
-Advances represent **ideas, inventions, technologies, and other examples of progress** unlocked over time.
+Advances represent **ideas, inventions, technologies, and other examples of
+progress** unlocked over time.
 
 ### Research Mechanics
 
 **One Advance at a Time**:
+
 - Each country can research only one advance at a time
 - Must complete current advance before starting next
 - Choose carefully based on strategic needs
 
 **Research Progress Requirements**:
+
 - **Current Age Advances**: Require **25 Research Progress**
 - **Previous Age Advances**: Require **17 Research Progress**
 - Older advances cheaper (easier to catch up)
 
 **Research Storage**:
+
 - If not researching an advance, store up to **12 months** of research progress
 - Starting new research uses stored progress
 - Prevents waste when between advances
@@ -148,12 +175,14 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 3. **Military Ability** (Crossed swords icon)
 
 **Focus Effects**:
+
 - Determines options in advance tree for that age
 - Cannot access other focus trees in same age
 - Commits you to strategic path
 - Choose based on national strategy
 
 **Focus Strategy**:
+
 - **Administrative**: Internal development, economy, governance
 - **Diplomatic**: Relations, trade, colonization
 - **Military**: Army, navy, warfare capabilities
@@ -162,18 +191,23 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Advance Trees
 
 **Structure**:
+
 - Each institution has an associated advance tree
 - Tree branches based on selected focus
 - Sequential unlocks (prerequisites required)
 - Some advances unlock others
 
 **Advance Types**:
+
 - **Technologies**: Ship designs, production methods, military units
 - **Ideas**: Bonuses to specific areas
 - **Inventions**: Unlock new mechanics or buildings
-- **Capabilities**: Enable new actions (e.g., "Drill Army", "March to the Sound of Guns")
+- **Capabilities**: Enable new actions (e.g., "Drill Army", "March to the Sound
+
+  of Guns")
 
 **Examples of Advances**:
+
 - **Diplomatic**: Increased diplomat limit
 - **Military**: "March to the Sound of Guns" army action
 - **Administrative**: Improved production methods
@@ -182,18 +216,21 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Research Progression Strategy
 
 **Early Age**:
+
 - Focus on foundational advances
 - Ensure institutions embraced at 20%
 - Build research infrastructure
 - Don't fall behind on critical institutions
 
 **Mid Age**:
+
 - Complete current age advances
 - Selectively research previous age advances
 - Balance breadth vs. depth
 - Leverage 17-progress cost for catch-up
 
 **Late Age**:
+
 - Maximize current age advances
 - Fill gaps from previous ages
 - Prepare for next age transition
@@ -204,6 +241,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Government Power
 
 **Administrative Focus**:
+
 - Many advances improve administrative efficiency
 - Government power generation affected
 - Cabinet effectiveness enhanced
@@ -212,6 +250,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Military Units
 
 **Military Advances Required**:
+
 - New unit types locked behind advances
 - Ship designs need specific advances
 - Army capabilities require research
@@ -220,6 +259,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Diplomatic Capacity
 
 **Diplomatic Advances**:
+
 - Maximum diplomats increased by certain advances
 - Diplomatic actions unlocked
 - Relations capacity improved
@@ -228,6 +268,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Economy
 
 **Production Methods**:
+
 - Advanced production methods require specific advances
 - Buildings unlocked through research
 - Economic efficiency improvements
@@ -236,6 +277,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Society
 
 **Societal Values**:
+
 - Some advances shift societal values
 - Employment systems unlocked
 - Population mechanics enhanced
@@ -246,12 +288,14 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Institution Priority
 
 **Critical Institutions to Embrace Early**:
+
 1. **Renaissance** (if European): Unlocks cultural advances
 2. **Printing Press**: Spreads ideas and reduces unrest
 3. **Colonialism** (if naval power): Enables colonial expansion
 4. **Military innovations**: Stay competitive in warfare
 
 **Less Urgent Institutions**:
+
 - Those not aligned with your strategy
 - Institutions that haven't spread to neighbors
 - Late-age institutions with low impact
@@ -259,18 +303,21 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Focus Selection Strategy
 
 **Administrative Focus When**:
+
 - Building tall (development over expansion)
 - Economic powerhouse strategy
 - Internal stability issues
 - Need government reforms
 
 **Diplomatic Focus When**:
+
 - Colonial strategy
 - Trade empire building
 - Alliance network important
 - Vassalization strategy
 
 **Military Focus When**:
+
 - Aggressive expansion planned
 - Surrounded by hostile neighbors
 - Naval power critical
@@ -279,12 +326,14 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Research Timing
 
 **When to Store Research**:
+
 - Between strategic objectives
 - Uncertain which advance needed next
 - Approaching age transition
 - Waiting for institution to spawn
 
 **When to Rush Research**:
+
 - Critical military advance needed for war
 - Falling behind neighbors
 - Institution unlock essential
@@ -293,12 +342,14 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Catch-Up Mechanics
 
 **Falling Behind**:
+
 - Previous age advances cost 17 (vs. 25 for current)
 - Easier to catch up on older technology
 - Institutions spread from neighbors naturally
 - Can leapfrog by focusing on current age
 
 **Staying Ahead**:
+
 - Embrace institutions at 20% threshold
 - Complete current age advances first
 - Build institutions spread infrastructure
@@ -306,20 +357,21 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 
 ## Common Pitfalls
 
-1. **Ignoring Institutions**: Falling behind dooms your nation to irrelevance
-2. **Wrong Focus Selection**: Committing to wrong strategic path for entire age
-3. **Late Institution Embrace**: Waiting too long to embrace at 20% threshold
-4. **Wasting Research Progress**: Not utilizing 12-month storage mechanic
-5. **Unbalanced Research**: Only focusing on one ability type across all ages
-6. **Neglecting Previous Ages**: Missing cheap (17-progress) advances from older ages
-7. **Poor Institution Spreading**: Not building infrastructure to accelerate spread
-8. **Age Transition Surprise**: Not preparing for automatic age change
+- **Ignoring Institutions**: Falling behind dooms your nation to irrelevance
+- **Wrong Focus Selection**: Committing to wrong strategic path for entire age
+- **Late Institution Embrace**: Waiting too long to embrace at 20% threshold
+- **Wasting Research Progress**: Not utilizing 12-month storage mechanic
+- **Unbalanced Research**: Only focusing on one ability type across all ages
+- **Neglecting Previous Ages**: Missing cheap (17-progress) advances from older ages
+- **Poor Institution Spreading**: Not building infrastructure to accelerate spread
+- **Age Transition Surprise**: Not preparing for automatic age change
 
 ## Advanced Strategies
 
-### Institution Spreading
+### Institution Spreading (Advanced)
 
 **Accelerate Spread to Your Territory**:
+
 - Build universities and libraries
 - Develop high-development provinces
 - Establish trade connections with source regions
@@ -327,6 +379,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 - Cultural policies to reduce resistance
 
 **Prevent Spreading to Rivals**:
+
 - Cannot directly prevent (institutions spread naturally)
 - Relative advantage: Embrace early, they fall behind
 - Economic warfare: Disrupt their trade
@@ -335,6 +388,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Multi-Age Planning
 
 **Long-Term Strategy**:
+
 - Plan focus selection across multiple ages
 - Age 1: Administrative (economy)
 - Age 2: Military (expansion)
@@ -342,6 +396,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 - Adapt based on circumstances
 
 **Flexibility**:
+
 - Age transitions offer reset opportunities
 - Change strategy when situation changes
 - Balance overall advancement
@@ -349,12 +404,14 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Research Prioritization
 
 **Essential Advances First**:
+
 - Military advances before major wars
 - Economic advances during peacetime
 - Diplomatic advances before colonization
 - Situational: Respond to threats and opportunities
 
 **Nice-to-Have Advances Later**:
+
 - Marginal improvements
 - Niche capabilities
 - Advances for playstyle variety
@@ -371,6 +428,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Age of Renaissance (1342-1442)
 
 **Three Renaissance Institutions**:
+
 - Spawn in Italy
 - Cultural and artistic innovations
 - Unlock Renaissance advance trees
@@ -379,6 +437,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Age of Discovery (1442-1542)
 
 **Expected Institutions** (not fully documented):
+
 - Likely colonialism/exploration related
 - Enabling New World expansion
 - Naval technologies
@@ -387,6 +446,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Age of Reformation (1542-1642)
 
 **Expected Institutions** (not fully documented):
+
 - Religious innovations
 - Protestant/Catholic advances
 - Religious warfare capabilities
@@ -395,6 +455,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Age of Absolutism (1642-1742)
 
 **Expected Institutions** (not fully documented):
+
 - Centralized government
 - Professional standing armies
 - Bureaucratic innovations
@@ -403,6 +464,7 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ### Age of Revolutions (1742-1842)
 
 **Expected Institutions** (not fully documented):
+
 - Revolutionary ideas
 - Nationalism
 - Industrial capabilities
@@ -411,6 +473,9 @@ Advances represent **ideas, inventions, technologies, and other examples of prog
 ## References
 
 [1] [Age - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Age)
-[2] [Age of Renaissance - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Age_of_Renaissance)
-[3] [Age of Traditions - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Age_of_Traditions)
-[4] [Age of Discovery - Europa Universalis 5 Wiki](https://eu5.paradoxwikis.com/Age_of_Discovery)
+[2] [Age of Renaissance - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Age_of_Renaissance)
+[3] [Age of Traditions - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Age_of_Traditions)
+[4] [Age of Discovery - Europa Universalis 5
+Wiki](https://eu5.paradoxwikis.com/Age_of_Discovery)
