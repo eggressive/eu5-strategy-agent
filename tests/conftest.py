@@ -10,7 +10,7 @@ This module provides:
 
 import tempfile
 from pathlib import Path
-from typing import Dict, Generator
+from typing import Dict, Generator, Optional
 from unittest.mock import Mock
 
 import pytest
@@ -21,7 +21,7 @@ def mock_openai_response():
     """Create a mock OpenAI API response."""
 
     def _create_response(
-        content: str = "Test response", tool_calls: list = None, finish_reason: str = "stop"
+        content: str = "Test response", tool_calls: Optional[list] = None, finish_reason: str = "stop"
     ):
         """
         Create a mock OpenAI response.
@@ -196,6 +196,3 @@ def reset_config_singleton():
     reset_config()
     yield
     reset_config()
-
-
-

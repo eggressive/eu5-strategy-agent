@@ -98,6 +98,7 @@ class TestKnowledgeCategories:
         kb = EU5Knowledge(str(temp_knowledge_base))
         subcategories = kb.list_subcategories("mechanics")
 
+        assert subcategories is not None
         assert isinstance(subcategories, list)
         assert "economy" in subcategories
         assert "society" in subcategories
@@ -108,6 +109,7 @@ class TestKnowledgeCategories:
         kb = EU5Knowledge(str(temp_knowledge_base))
         subcategories = kb.list_subcategories("strategy")
 
+        assert subcategories is not None
         assert "beginner_route" in subcategories
         assert "common_mistakes" in subcategories
 
@@ -116,6 +118,7 @@ class TestKnowledgeCategories:
         kb = EU5Knowledge(str(temp_knowledge_base))
         subcategories = kb.list_subcategories("nations")
 
+        assert subcategories is not None
         assert "england" in subcategories
 
     def test_list_subcategories_invalid_category(self, temp_knowledge_base):
@@ -353,6 +356,7 @@ class TestKnowledgeIntegration:
 
         # 2. List subcategories
         subcategories = kb.list_subcategories("mechanics")
+        assert subcategories is not None
         assert "economy" in subcategories
 
         # 3. Retrieve knowledge
