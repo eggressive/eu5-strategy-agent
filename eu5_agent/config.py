@@ -50,9 +50,7 @@ class EU5Config:
 
         # Knowledge Base Configuration
         # Set to None to trigger auto-detection in knowledge.py
-        # This enables backward-compatible path detection for both:
-        # - pip-installed package (knowledge inside eu5_agent/)
-        # - source repository (knowledge at repository root via symlink)
+        # Auto-detection uses the packaged knowledge at eu5_agent/knowledge
         self.knowledge_path = os.getenv("EU5_KNOWLEDGE_PATH", None)
 
         # Web Search Configuration (Optional)
