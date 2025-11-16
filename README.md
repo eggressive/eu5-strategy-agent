@@ -258,13 +258,50 @@ The agent uses:
 
 ## Testing
 
-Run the test suite:
+### Unit Tests
+
+Run the full test suite (excludes integration tests by default):
 
 ```bash
-python tests/test_agent.py
+pytest
 ```
 
-Test your API key and model:
+Run only unit tests (explicitly exclude integration tests):
+
+```bash
+pytest -m "not openai_integration"
+```
+
+### Integration Tests
+
+The repository includes optional integration tests that make real OpenAI API calls. These tests:
+- Are gated behind the `openai_integration` pytest marker
+- Skip automatically when `OPENAI_API_KEY` is not set
+- Keep costs low (max_completion_tokens ≤ 50, single-turn interactions)
+- Verify actual OpenAI API functionality
+
+**Run integration tests:**
+
+```bash
+# Set your API key first
+export OPENAI_API_KEY=your-api-key-here
+
+# Optional: customize model and base URL
+export OPENAI_MODEL=gpt-5-mini
+export OPENAI_BASE_URL=https://api.openai.com/v1
+
+# Run integration tests only
+pytest -m openai_integration
+
+# Run all tests (unit + integration)
+pytest
+```
+
+**Note:** Integration tests will incur minimal API costs (typically < $0.01 per run).
+
+### Quick API Test
+
+Test your API key and model configuration:
 
 ```bash
 python tests/test_openai_api.py
