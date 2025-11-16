@@ -2,14 +2,9 @@
 
 This document tracks planned enhancements and features for the EU5 Strategy Agent.
 
-## High Priority
+## TIER 1 - Quality & Reliability (Critical)
 
-### PyPI Publication
-
-- [ ] Publish package to PyPI for `pip install eu5-strategy-agent`
-- [ ] Test PyPI installation process
-- [ ] Set up PyPI credentials and publishing workflow
-- [ ] Update README with actual PyPI installation instructions
+**Rationale**: Agent is being shared for testing - must be reliable and error-free.
 
 ### Testing Infrastructure
 
@@ -19,37 +14,75 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Add tests for web search fallback
 - [ ] Migrate from manual test scripts to pytest test suite
 
+### Configuration Validation
+
+- [ ] Add configuration validation before agent starts
+- [ ] Validate API keys exist and have correct format
+- [ ] Check knowledge base path exists and is readable
+- [ ] Verify model compatibility (function calling support)
+- [ ] Provide clear error messages for misconfigurations
+
+### Tavily Integration Testing
+
+- [ ] Test Tavily API with various query types
+- [ ] Test with different complexity levels
+- [ ] Verify fallback behavior when Tavily fails
+- [ ] Document optimal query patterns for Tavily
+- [ ] Monitor API usage and rate limits
+
+## TIER 2 - Cost Reduction (High Value)
+
+**Rationale**: OpenAI GPT-5 is expensive - alternative providers can significantly reduce costs.
+
 ### Alternative LLM Providers
 
-- [ ] Test Groq integration with function calling
-- [ ] Test Google AI Studio (Gemini) integration
+- [ ] Test Groq integration (free tier, very fast)
+- [ ] Test Google AI Studio (Gemini free tier)
 - [ ] Test OpenRouter with free models
 - [ ] Document provider-specific quirks and limitations
-- [ ] Create provider comparison examples in docs
+- [ ] Create provider comparison guide (cost, speed, quality)
 
-### Features
+### Performance Optimization
 
 - [ ] Implement caching mechanism for repeated queries
-- [x] Improve search capabilities (replaced Google with Tavily AI-optimized search)
+- [ ] Cache knowledge base query results
+- [ ] Add response memoization for identical questions
+- [ ] Monitor and log cache hit rates
+
+## TIER 3 - User Experience (Quality of Life)
+
+**Rationale**: Improve usability for end users (your son and others).
+
+### Conversation Management
+
 - [ ] Add conversation history export/import
-- [ ] Test Tavily API with various query types and complexity levels
-- [x] Add support for custom knowledge base paths (configurable via EU5_KNOWLEDGE_PATH)
+- [ ] Save conversation sessions to disk
+- [ ] Resume previous conversations
+- [ ] Add conversation search/filtering
 
-## Medium Priority
-
-### Architecture Improvements
+### Performance Improvements
 
 - [ ] Add async support for concurrent operations
-- [x] Implement proper logging system (added logging for verbose mode, warnings module for library warnings)
-- [ ] Add configuration validation
-- [x] Make knowledge base path configurable via environment variable (EU5_KNOWLEDGE_PATH)
+- [ ] Parallelize knowledge base queries
+- [ ] Improve response time for complex queries
 
-### Nation Guides
+## TIER 4 - Content Expansion (After Core is Solid)
+
+**Rationale**: Expand knowledge base once technical foundation is stable.
+
+### High-Value Nation Guides
 
 - [ ] Create Ottomans opening strategy guide
 - [ ] Create France opening strategy guide
 - [ ] Create Castile opening strategy guide
 - [ ] Create Portugal opening strategy guide
+
+### Missing Mechanics Verification
+
+- [ ] Verify religion mechanics coverage
+- [ ] Verify culture mechanics coverage
+- [ ] Verify exploration mechanics coverage
+- [ ] Document any missing estate mechanics
 
 ### Advanced Strategy Guides
 
@@ -58,21 +91,15 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Military conquest path guides
 - [ ] Diplomatic victory strategies
 
-### Additional Mechanics
+## TIER 5 - Future Enhancements (Low Priority)
 
-- [ ] Verify religion mechanics coverage
-- [ ] Verify culture mechanics coverage
-- [ ] Verify exploration mechanics coverage
-- [ ] Document any missing estate mechanics
-
-## Low Priority
+**Rationale**: Nice to have, but not critical for core functionality.
 
 ### CI/CD Pipeline
 
 - [ ] Set up GitHub Actions workflow for testing
 - [ ] Add automated linting (black, ruff, mypy)
 - [ ] Add automated markdown linting
-- [ ] Configure automated PyPI publishing on release
 
 ### Multiplayer Support
 
@@ -100,6 +127,7 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 ### Completed This Session
 
 **Tavily Integration:**
+
 - [x] Replace Google search with Tavily API (AI-optimized, no rate limits)
 - [x] Increase agent max_iterations to 10 for complex web search queries
 - [x] Add Tavily API key configuration and documentation
@@ -109,6 +137,7 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [x] Extract query context prefixing into helper function (DRY)
 
 **Code Quality & Best Practices:**
+
 - [x] Fix PEP 8 import issues in cli.py (move load_dotenv to module level)
 - [x] Document intentional redundant .env loading in cli.py
 - [x] Replace print() with warnings.warn() in search.py (6 replacements)
@@ -119,26 +148,8 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [x] Simplify redundant sort key in search.py
 
 **Type Safety:**
+
 - [x] Add proper OpenAI SDK type annotations (ChatCompletionMessageParam, ChatCompletionToolParam)
 - [x] Use cast() for message type handling
 - [x] Add type: ignore for incomplete tool_call stubs
 - [x] Fix Tavily client cache type annotation (Dict[str, Any])
-
-**Configuration Architecture:**
-- [x] Fix tavily_api_key config inconsistency (pass through config instead of env direct access)
-- [x] Add TAVILY_API_KEY to configuration table in docs
-
-**Documentation:**
-- [x] Update README.md with Tavily information
-- [x] Update CONFIGURATION.md with comprehensive Tavily section
-- [x] Fix all markdownlint errors in CONFIGURATION.md (MD013, MD034, MD031, MD040, MD032)
-- [x] Fix incorrect script names (run_eu5_standalone.py → run_agent.py) across all docs
-- [x] Fix incorrect package names (eu5_standalone → eu5_agent) in docs
-- [x] Obfuscate username from paths in documentation
-- [x] Document search_eu5_wiki_comprehensive as library API
-- [x] Add __all__ export list to search.py
-
-**Dependency Management:**
-- [x] Update requirements.txt (remove 3 packages, add tavily-python)
-- [x] Sync pyproject.toml dependencies with requirements.txt
-- [x] Update .env.example with Tavily documentation

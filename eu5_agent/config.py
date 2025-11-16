@@ -93,6 +93,13 @@ class EU5Config:
                 "  OPENAI_API_KEY=your-key-here"
             )
 
+        if self.knowledge_path is None:
+            return False, (
+                "Knowledge base path not configured.\n"
+                "Set EU5_KNOWLEDGE_PATH environment variable or ensure\n"
+                "knowledge base exists in the default location."
+            )
+
         knowledge_path = Path(self.knowledge_path)
         if not knowledge_path.exists():
             return False, (

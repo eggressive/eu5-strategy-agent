@@ -7,7 +7,7 @@ No framework dependencies - just reads markdown files and returns content.
 
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 
 class EU5Knowledge:
@@ -113,7 +113,7 @@ class EU5Knowledge:
         self,
         category: str,
         subcategory: Optional[str] = None
-    ) -> Dict[str, str]:
+    ) -> Dict[str, Any]:
         """
         Retrieve knowledge from the knowledge base.
 
