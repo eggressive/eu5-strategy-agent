@@ -53,9 +53,8 @@ class TestKnowledgeInitialization:
             mock_instance.exists.return_value = True
             mock_path.return_value.__truediv__ = Mock(return_value=mock_instance)
 
-            # Should find knowledge in package directory
-            _kb = EU5Knowledge()  # noqa: F841
-            # Verification happens if no exception is raised
+            # Should find knowledge in package directory without raising exception
+            EU5Knowledge()
 
     def test_auto_detect_repository_structure(self, tmp_path):
         """Test auto-detection fallback to repository structure."""
