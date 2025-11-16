@@ -60,18 +60,6 @@ def mock_openai_response():
 
 
 @pytest.fixture
-def mock_openai_client(mock_openai_response):
-    """Create a mock OpenAI client."""
-    client = Mock()
-    client.chat = Mock()
-    client.chat.completions = Mock()
-    client.chat.completions.create = Mock(
-        return_value=mock_openai_response("Test response from OpenAI")
-    )
-    return client
-
-
-@pytest.fixture
 def temp_knowledge_base() -> Generator[Path, None, None]:
     """
     Create a temporary knowledge base directory with sample files.
@@ -123,42 +111,6 @@ def temp_knowledge_base() -> Generator[Path, None, None]:
         )
 
         yield kb_path
-
-
-@pytest.fixture
-def mock_tavily_response():
-    """Create a mock Tavily API response."""
-
-    def _create_response(query: str = "test query", num_results: int = 3):
-        """
-        Create a mock Tavily search response.
-
-        Args:
-            query: Search query
-            num_results: Number of results to return
-        """
-        results = []
-        for i in range(num_results):
-            results.append(
-                {
-                    "title": f"Test Result {i+1}",
-                    "url": f"https://eu5.paradoxwikis.com/test-{i+1}",
-                    "content": f"Test content for result {i+1}. " * 20,  # ~300 chars
-                    "score": 0.9 - (i * 0.1),
-                }
-            )
-
-        return {"results": results}
-
-    return _create_response
-
-
-@pytest.fixture
-def mock_tavily_client(mock_tavily_response):
-    """Create a mock Tavily client."""
-    client = Mock()
-    client.search = Mock(return_value=mock_tavily_response())
-    return client
 
 
 @pytest.fixture
@@ -232,16 +184,6 @@ def sample_tool_call():
     return _create_tool_call
 
 
-@pytest.fixture
-def mock_dotenv(monkeypatch):
-    """Mock the dotenv loading functionality."""
-
-    def mock_load_dotenv(*args, **kwargs):
-        return True
-
-    monkeypatch.setattr("eu5_agent.config.load_dotenv", mock_load_dotenv, raising=False)
-
-
 @pytest.fixture(autouse=True)
 def reset_config_singleton():
     """
@@ -256,12 +198,4 @@ def reset_config_singleton():
     reset_config()
 
 
-@pytest.fixture
-def sample_markdown_files():
-    """Provide sample markdown content for testing."""
-    return {
-        "economy": "# Economy\n\nDucats, trade, and production.",
-        "society": "# Society\n\nEstates, privileges, and agendas.",
-        "beginner": "# Beginner Guide\n\nStart with a strong nation.",
-        "england": "# England\n\nConquer Scotland first.",
-    }
+

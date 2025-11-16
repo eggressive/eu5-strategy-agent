@@ -9,9 +9,8 @@ Tests cover:
 - Caching mechanism
 """
 
-from unittest.mock import Mock, patch
 import warnings
-
+from unittest.mock import Mock, patch
 
 from eu5_agent.search import search_eu5_wiki, _ensure_eu5_context, _tavily_clients
 
