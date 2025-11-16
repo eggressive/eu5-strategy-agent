@@ -66,9 +66,13 @@ def test_api_key():
         print(f"  {response.choices[0].message.content}")
 
         print("\nToken usage:")
-        print(f"  Prompt tokens: {response.usage.prompt_tokens}")
-        print(f"  Completion tokens: {response.usage.completion_tokens}")
-        print(f"  Total tokens: {response.usage.total_tokens}")
+        usage = getattr(response, "usage", None)
+        if usage is not None:
+            print(f"  Prompt tokens: {usage.prompt_tokens}")  # type: ignore
+            print(f"  Completion tokens: {usage.completion_tokens}")  # type: ignore
+            print(f"  Total tokens: {usage.total_tokens}")  # type: ignore
+        else:
+            print("  (usage details not provided)")
 
         print(f"\nFinish reason: {response.choices[0].finish_reason}")
 
