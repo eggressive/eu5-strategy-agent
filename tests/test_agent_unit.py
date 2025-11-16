@@ -70,7 +70,9 @@ class TestAgentInitialization:
 
         assert len(agent.messages) == 1
         assert agent.messages[0]["role"] == "system"
-        assert len(agent.messages[0]["content"]) > 0
+        content = agent.messages[0]["content"]
+        assert isinstance(content, str)
+        assert len(content) > 0
 
 
 class TestConversationHistory:

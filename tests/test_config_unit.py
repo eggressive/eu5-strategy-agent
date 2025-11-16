@@ -153,6 +153,7 @@ class TestConfigValidation:
         is_valid, error = config.validate()
 
         assert is_valid is False
+        assert error is not None
         assert "OPENAI_API_KEY not set" in error
 
     def test_validate_with_missing_knowledge_path(self, monkeypatch, tmp_path):
@@ -164,6 +165,7 @@ class TestConfigValidation:
         is_valid, error = config.validate()
 
         assert is_valid is False
+        assert error is not None
         assert "Knowledge base not found" in error
 
     def test_validate_with_valid_config(self, monkeypatch, temp_knowledge_base):
