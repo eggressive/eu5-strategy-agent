@@ -162,8 +162,6 @@ class EU5Agent:
                 return "Error: invalid tool arguments ('category' must be a string)"
             if arguments.get("subcategory") is not None and not isinstance(arguments.get("subcategory"), str):
                 return "Error: invalid tool arguments ('subcategory' must be a string if provided)"
-
-        if function_name == "query_knowledge":
             return self._query_knowledge(**arguments)
         elif function_name == "web_search":
             if not isinstance(arguments, dict) or "query" not in arguments:
