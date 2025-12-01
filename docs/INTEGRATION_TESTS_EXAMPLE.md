@@ -207,12 +207,22 @@ $ pytest tests/test_openai_integration.py -v -s
 ### Some tests fail
 
 If `test_invalid_model_handling` fails:
+
 - This is expected with some providers that don't validate model names
 - The test can be skipped with: `pytest -m openai_integration -k "not invalid_model"`
 
 If `test_tool_call_handshake` fails:
+
 - Some models may not support tool calling
 - Try with a different model that supports function calling
+
+### Test Isolation & Caching
+
+Integration tests clear in-memory caches between tests to prevent leaked state. If you are running tests locally and rely on caching behavior, use `clear_all_caches()` from `eu5_agent.cache` or the CLI `--cache-stats` flag to ensure a clean test environment and to inspect cache hit/miss rates.
+
+```bash
+python -m eu5_agent.cli --cache-stats
+```
 
 ## Summary
 

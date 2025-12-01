@@ -16,6 +16,7 @@ knowledge base covering all 8 main game panels.
 - **Web Search Fallback** - Automatically searches for missing content
   (prioritizes eu5.paradoxwikis.com)
 - **Beautiful CLI** - Rich terminal formatting with markdown rendering
+- **In-memory caching** - Lightweight LRU caches for knowledge and search to reduce repeated file I/O and queries (use `--cache-stats` to view stats)
 - **Flexible Configuration** - Environment variables, .env files, or direct parameters
 - **Fast Responses** - 2-3 second response times
 
@@ -197,6 +198,35 @@ eu5-agent --query "How do estates work?"
 ```
 
 Note: Using `pip install -e .` will install the console script `eu5-agent` defined in `pyproject.toml` so you can run the CLI without `python -m`.
+
+### Why you might see "ModuleNotFoundError: No module named 'eu5_agent'"
+
+When running `python -m eu5_agent.cli`, Python interprets the module path relative to the working directory. If you execute `python -m eu5_agent.cli` from within the `eu5_agent/` directory itself (or other subdirectory where the package name duplicates a file/directory), Python's import machinery may not find the correct package root, causing a `ModuleNotFoundError`.
+
+To avoid this:
+
+- Run the module from the repository root (where `setup.py`/`pyproject.toml` lives):
+
+```bash
+cd /path/to/eu5-strategy-agent
+python -m eu5_agent.cli --query "How do estates work?"
+```
+
+- Or run with an explicit `PYTHONPATH` that includes the repo root:
+
+```bash
+cd /path/to/eu5-strategy-agent/eu5_agent
+PYTHONPATH=. python -m eu5_agent.cli --query "How do estates work?"
+```
+
+- For a better developer experience, install the package in editable mode so you can run `eu5-agent` directly and avoid module discovery issues:
+
+```bash
+pip install -e .[dev]
+eu5-agent --query "How do estates work?"
+```
+
+This is a common Python packaging pitfall. Using one of the approaches above ensures Python can find the package root and run the module correctly.
 
 ## Knowledge Base Coverage
 
