@@ -10,9 +10,21 @@ Tests cover:
 """
 
 import warnings
+import pytest
 from unittest.mock import Mock, patch
 
 from eu5_agent.search import search_eu5_wiki, _ensure_eu5_context, _tavily_clients
+from eu5_agent.cache import clear_all_caches
+
+
+@pytest.fixture(autouse=True)
+def _clear_search_cache_fixture():
+    # Ensure tests don't see cached results from other tests
+    clear_all_caches()
+    _tavily_clients.clear()
+    yield
+    clear_all_caches()
+    _tavily_clients.clear()
 
 
 class TestQueryContextPrefixing:
@@ -170,3 +182,24 @@ class TestBasicSearch:
 
         call_args = mock_client.search.call_args
         assert call_args[1]["search_depth"] == "basic"
+
+    def test_search_caching(self, monkeypatch):
+        """Test that repeated searches are served from cache and avoid re-calling the TavilyClient."""
+        monkeypatch.setenv("TAVILY_API_KEY", "tvly-test-key")
+        clear_all_caches()
+
+        mock_client = Mock()
+        # simulate results
+        mock_client.search = Mock(return_value={"results": [{"title": "Result 1", "url": "url1", "content": "test"}]})
+
+        with patch("tavily.TavilyClient", return_value=mock_client):
+            # First search should call the client
+            results1 = search_eu5_wiki("France strategy", api_key="tvly-test-key")
+            assert len(results1) == 1
+
+            # Second search with same parameters should be served from cache
+            results2 = search_eu5_wiki("France strategy", api_key="tvly-test-key")
+            assert len(results2) == 1
+
+            # Ensure the underlying client.search was only called once
+            assert mock_client.search.call_count == 1

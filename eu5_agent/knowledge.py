@@ -8,6 +8,7 @@ No framework dependencies - just reads markdown files and returns content.
 import os
 from pathlib import Path
 from typing import Any, Dict, Optional
+from .cache import knowledge_cache
 
 
 class EU5Knowledge:
@@ -124,6 +125,11 @@ class EU5Knowledge:
                 subcategory = "all"
             else:
                 available = self.list_subcategories(category)
+                if not available:
+                    return {
+                        "status": "list",
+                        "content": f"Please specify a subcategory. Available in '{category}': (none)"
+                    }
                 return {
                     "status": "list",
                     "content": f"Please specify a subcategory. "
@@ -133,6 +139,11 @@ class EU5Knowledge:
         # Validate subcategory
         if subcategory not in self.KNOWLEDGE_MAP[category]:
             available = self.list_subcategories(category)
+            if not available:
+                return {
+                    "status": "error",
+                    "error": f"Invalid subcategory '{subcategory}' for '{category}'. Available: (none)"
+                }
             return {
                 "status": "error",
                 "error": f"Invalid subcategory '{subcategory}' for '{category}'. "
@@ -148,18 +159,27 @@ class EU5Knowledge:
                 "status": "error",
                 "error": f"Knowledge file not found: {filename}"
             }
+        # Use caching to avoid repeated disk reads
+        cache_key = f"knowledge:{category}:{subcategory}"
+        cached = knowledge_cache.get(cache_key)
+        if cached is not None:
+            return cached
 
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
 
-            return {
+            result = {
                 "status": "success",
                 "content": content,
                 "source": f"{category}/{subcategory}",
                 "file": filename,
                 "size": len(content)
             }
+
+            knowledge_cache.set(cache_key, result)
+
+            return result
 
         except Exception as e:
             return {
