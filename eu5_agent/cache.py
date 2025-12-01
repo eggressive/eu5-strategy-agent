@@ -8,7 +8,8 @@ for unit tests and CI environments.
 from __future__ import annotations
 
 from collections import OrderedDict
-from typing import Any, Dict, Optional, Tuple
+import threading
+from typing import Any, Dict, Optional
 
 
 class LRUCache:
@@ -17,38 +18,47 @@ class LRUCache:
         self._cache: OrderedDict[str, Any] = OrderedDict()
         self._hits = 0
         self._misses = 0
+        # Reentrant lock for thread safety. This makes the cache safe to use
+        # across multiple threads and prevents race conditions in _cache,
+        # _hits, and _misses counters.
+        self._lock = threading.RLock()
 
     def get(self, key: str) -> Optional[Any]:
         # Return cached value if present and update LRU order
-        if key in self._cache:
-            value = self._cache.pop(key)
-            self._cache[key] = value
-            self._hits += 1
-            return value
-        self._misses += 1
-        return None
+        with self._lock:
+            if key in self._cache:
+                # Move to end (most recent)
+                value = self._cache.pop(key)
+                self._cache[key] = value
+                self._hits += 1
+                return value
+            self._misses += 1
+            return None
 
     def set(self, key: str, value: Any) -> None:
-        if key in self._cache:
-            # Remove old instance so that it becomes the most recent
-            self._cache.pop(key)
-        elif len(self._cache) >= self.maxsize:
-            # Remove oldest entry
-            self._cache.popitem(last=False)
-        self._cache[key] = value
+        with self._lock:
+            if key in self._cache:
+                # Remove old instance so that it becomes the most recent
+                self._cache.pop(key)
+            elif len(self._cache) >= self.maxsize:
+                # Remove oldest entry
+                self._cache.popitem(last=False)
+            self._cache[key] = value
 
     def clear(self) -> None:
-        self._cache.clear()
-        self._hits = 0
-        self._misses = 0
+        with self._lock:
+            self._cache.clear()
+            self._hits = 0
+            self._misses = 0
 
     def stats(self) -> Dict[str, int]:
-        return {
-            "size": len(self._cache),
-            "maxsize": self.maxsize,
-            "hits": self._hits,
-            "misses": self._misses,
-        }
+        with self._lock:
+            return {
+                "size": len(self._cache),
+                "maxsize": self.maxsize,
+                "hits": self._hits,
+                "misses": self._misses,
+            }
 
 
 # Module-level default caches
