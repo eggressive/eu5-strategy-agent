@@ -236,8 +236,8 @@ When adding new integration tests:
    from eu5_agent.cache import clear_all_caches
 
    def test_something():
-     clear_all_caches()
-     # run test
+       clear_all_caches()
+       # run test
    ```
 
    There is an autouse fixture used in `tests/test_search_unit.py` which ensures
