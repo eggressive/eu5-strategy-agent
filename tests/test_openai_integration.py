@@ -237,17 +237,26 @@ class TestOpenAIToolCalling:
             messages=[{"role": "user", "content": "Tell me about EU5 game mechanics."}],
             tools=tools,
             tool_choice="auto",
-            max_completion_tokens=50,
+            max_completion_tokens=200,
         )
 
         # Response should be valid
         assert response.choices, "Response should have choices"
         message = response.choices[0].message
+        finish_reason = response.choices[0].finish_reason
+        content = message.content or ""
 
-        # Should have either tool_calls or content
+        # Debug info to help diagnose intermittent failures
+        print(f"DEBUG: tool_query model={response.model}, finish_reason={finish_reason}, content_len={len(content)}")
+
+        # Should have either tool_calls or content. If truncated (length), accept
+        # but ensure usage information is present.
         assert (
             message.tool_calls is not None or message.content is not None
         ), "Response should have tool_calls or content"
+
+        if finish_reason == "length":
+            assert response.usage is not None
 
 
 @pytest.mark.openai_integration
