@@ -122,7 +122,7 @@ class TestOpenAIChatCompletion:
         # 1) Model returned tool_calls (function calling) -> validate structure
         # 2) Model returned non-truncated text (finish_reason == 'stop') -> assert content
         # 3) Model truncated (finish_reason == 'length') -> accept but ensure usage info
-        if tool_calls:
+        if tool_calls and len(tool_calls) > 0:
             # Tools were NOT sent in this request; tool_calls appearing here
             # would indicate an unexpected model or API behavior. Skip the
             # test with diagnostics so CI doesn't fail due to an upstream
