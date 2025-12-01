@@ -170,6 +170,34 @@ response = agent.chat("How does the market system work?")
 print(response)
 ```
 
+## Running locally
+
+If you want to run the CLI directly from the repository or make the console script available, use one of these approaches:
+
+- Run from the repository root (recommended):
+
+```bash
+# Module invocation
+python -m eu5_agent.cli --cache-stats
+python -m eu5_agent.cli --query "How do estates work in EU5?"
+```
+
+- If you're inside the `eu5_agent/` directory or have PYTHONPATH conflicts, explicitly set `PYTHONPATH` to the repo root so Python can discover packages correctly:
+
+```bash
+PYTHONPATH=. python -m eu5_agent.cli --cache-stats
+```
+
+- Install an editable package (recommended for local development) to enable the console script `eu5-agent`:
+
+```bash
+pip install -e .
+eu5-agent --cache-stats
+eu5-agent --query "How do estates work?"
+```
+
+Note: Using `pip install -e .` will install the console script `eu5-agent` defined in `pyproject.toml` so you can run the CLI without `python -m`.
+
 ## Knowledge Base Coverage
 
 The agent includes comprehensive knowledge covering:
@@ -274,7 +302,8 @@ pytest -m "not openai_integration"
 
 ### Integration Tests
 
-The repository includes optional integration tests that make real OpenAI API calls. These tests:
+- The repository includes optional integration tests that make real OpenAI API calls. These tests:
+
 - Are gated behind the `openai_integration` pytest marker
 - Skip automatically when `OPENAI_API_KEY` is not set
 - Keep costs low (max_completion_tokens ≤ 50, single-turn interactions)
