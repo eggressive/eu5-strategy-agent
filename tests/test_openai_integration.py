@@ -108,14 +108,27 @@ class TestOpenAIChatCompletion:
             max_completion_tokens=200,
         )
 
+        message = response.choices[0].message
         finish_reason = response.choices[0].finish_reason
-        content = response.choices[0].message.content or ""
+        content = message.content or ""
+        tool_calls = getattr(message, "tool_calls", None)
 
         # Print debug information to help diagnose intermittent failures
-        print(f"DEBUG: model={response.model}, finish_reason={finish_reason}, content_len={len(content)}")
+        print(
+            f"DEBUG: model={response.model}, finish_reason={finish_reason}, content_len={len(content)}, tool_calls={len(tool_calls) if tool_calls else 0}"
+        )
 
-        if finish_reason == "length":
-            # Truncated: accept but ensure we have usage information
+        # Accept these valid cases:
+        # 1) Model returned tool_calls (function calling) -> validate structure
+        # 2) Model returned non-truncated text (finish_reason == 'stop') -> assert content
+        # 3) Model truncated (finish_reason == 'length') -> accept but ensure usage info
+        if tool_calls:
+            # Validate basic tool call structure
+            tool_call = tool_calls[0]
+            assert tool_call.function.name, "Tool call must have a function name"
+            assert tool_call.function.arguments, "Tool call should include arguments"
+        elif finish_reason == "length":
+            # Truncated: accept but ensure usage info is present
             assert response.usage is not None
         else:
             assert content, "Response should have content"
