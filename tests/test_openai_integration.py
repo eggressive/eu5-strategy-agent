@@ -309,4 +309,4 @@ class TestOpenAIErrorHandling:
             # Non-truncated content must be within limits and non-empty
             assert content, "Response should have content"
             assert response.usage.completion_tokens <= max_tokens, "Completion tokens should not exceed max_completion_tokens"
-            assert finish_reason in ["stop", "length"], "finish_reason should be 'stop' or 'length'"
+            assert finish_reason == "stop", "Non-truncated finish_reason should be 'stop'"
