@@ -153,14 +153,14 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Interactive mode
-  python -m eu5_standalone.cli
+    # Interactive mode
+    python -m eu5_agent.cli
 
-  # Single query
-  python -m eu5_standalone.cli --query "How do estates work?"
+    # Single query
+    python -m eu5_agent.cli --query "How do estates work?"
 
-  # Verbose mode (show tool calls)
-  python -m eu5_standalone.cli --query "England opening" --verbose
+    # Verbose mode (show tool calls)
+    python -m eu5_agent.cli --query "England opening" --verbose
 
 Environment Variables:
   OPENAI_API_KEY     Your OpenAI API key (required)
