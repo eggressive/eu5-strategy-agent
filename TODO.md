@@ -4,22 +4,12 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 
 ## TIER 1 - Quality & Reliability
 
-### Agent Reliability
-
-- [x] Harden tool-call argument parsing so malformed JSON from the model surfaces as a graceful error instead of crashing the chat loop.
-
-### Testing Infrastructure
-
-- [x] Add unit tests for core agent functionality
-- [ ] Add integration tests for OpenAI API interactions
-- [x] Add tests for knowledge base loading
-- [x] Add tests for web search fallback
-- [ ] Migrate from manual test scripts to pytest test suite
-
 ### Configuration Validation
 
 - [ ] Align `EU5Config.validate()` with knowledge path auto-detection (don’t fail validation when path is omitted; use the same resolution logic).
-- [ ] Add configuration validation before agent starts
+  
+  Note: `EU5Knowledge` auto-detects a packaged knowledge base when `EU5_KNOWLEDGE_PATH` is omitted — update `EU5Config.validate()` and its tests to use the same behavior (avoid failing validation when knowledge path is omitted).
+- [ ] Add configuration validation before agent starts (call `EU5Config.validate()` during CLI and/or `EU5Agent` initialization and provide clear, actionable messages to users)
 - [ ] Validate API keys exist and have correct format
 - [ ] Check knowledge base path exists and is readable
 - [ ] Verify model compatibility (function calling support)
@@ -52,6 +42,8 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Cache knowledge base query results
 - [ ] Add response memoization for identical questions
 - [ ] Monitor and log cache hit rates
+  
+  Note: The code currently caches Tavily client instances, but it does not cache responses or provide memoization; adding an LRU or disk cache for knowledge/query results would reduce LLM/API cost and improve response time.
 
 ## TIER 3 - User Experience
 
@@ -63,12 +55,16 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Save conversation sessions to disk
 - [ ] Resume previous conversations
 - [ ] Add conversation search/filtering
+  
+  Note: The interactive mode supports conversation history in-memory but lacks persistence; saving to JSON or a small DB is recommended.
 
 ### Performance Improvements
 
 - [ ] Add async support for concurrent operations
 - [ ] Parallelize knowledge base queries
 - [ ] Improve response time for complex queries
+  
+  Note: `pytest-asyncio` is included in dev dependencies, but repo code is largely synchronous; introducing async endpoints will enable parallelized knowledge/API usage.
 
 ## TIER 4 - Content Expansion
 
@@ -114,6 +110,8 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 ### CLI & Help Text
 
 - [ ] Fix CLI help/epilog to reference the correct module path (`eu5_agent.cli`) to avoid `ModuleNotFoundError`.
+  
+  Note: CLI examples currently mention `python -m eu5_standalone.cli`, which should be updated to `python -m eu5_agent.cli`.
 
 ### Local Model Support (Experimental)
 
@@ -129,25 +127,19 @@ This document tracks planned enhancements and features for the EU5 Strategy Agen
 - [ ] Track EU5 game patches and update mechanics files
 - [ ] Monitor EU5 wiki for new content and strategies
 - [ ] Update knowledge base as DLCs are released
-- [x] Address web search rate limiting issues (replaced Google with Tavily API)
 - [ ] Keep dependencies up to date
 
 ### Completed This Session
 
-**Code Quality & Best Practices:**
+#### Testing Infrastructure
 
-- [x] Fix PEP 8 import issues in cli.py (move load_dotenv to module level)
-- [x] Document intentional redundant .env loading in cli.py
-- [x] Replace print() with warnings.warn() in search.py (6 replacements)
-- [x] Replace print() with logger.info() in agent.py (3 replacements)
-- [x] Configure logging in CLI for verbose mode
-- [x] Fix unconditional ellipsis in content truncation
-- [x] Remove unreachable dead code in agent.py
-- [x] Simplify redundant sort key in search.py
+- [x] Migrate from manual test scripts to pytest test suite
 
-**Type Safety:**
+### Notes & Next Steps
 
-- [x] Add proper OpenAI SDK type annotations (ChatCompletionMessageParam, ChatCompletionToolParam)
-- [x] Use cast() for message type handling
-- [x] Add type: ignore for incomplete tool_call stubs
-- [x] Fix Tavily client cache type annotation (Dict[str, Any])
+- The repository already includes a strong pytest suite for agent functionality, knowledge loading, and web search. Suggested follow-ups:
+  1. Update `EU5Config.validate()` to support knowledge auto-detection and adjust `tests/test_config_unit.py::TestConfigValidation` accordingly.
+  2. Add clear differentiation for Tavily errors vs empty results (update `search_eu5_wiki()` to return structured status or an error type and update the agent behavior to show clearer messages).
+  3. Implement request/response caching for knowledge retrieval and Tavily searches, with a cache hit metric and basic LRU memory/disk-backed cache.
+  4. Add conversation export/import and CLI commands to save/restore sessions.
+  5. Fix the CLI example paths to `eu5_agent.cli` and ensure help/epilog text is accurate.
