@@ -186,7 +186,9 @@ python -m eu5_agent.cli --query "How do estates work in EU5?"
 - If you're inside the `eu5_agent/` directory or have PYTHONPATH conflicts, explicitly set `PYTHONPATH` to the repo root so Python can discover packages correctly:
 
 ```bash
-PYTHONPATH=. python -m eu5_agent.cli --cache-stats
+# If you're in the `eu5_agent/` subdirectory, set PYTHONPATH to the parent
+# directory (repo root) so Python can discover the package correctly.
+PYTHONPATH=.. python -m eu5_agent.cli --cache-stats
 ```
 
 - Install an editable package (recommended for local development) to enable the console script `eu5-agent`:
@@ -216,7 +218,8 @@ python -m eu5_agent.cli --query "How do estates work?"
 
 ```bash
 cd /path/to/eu5-strategy-agent/eu5_agent
-PYTHONPATH=. python -m eu5_agent.cli --query "How do estates work?"
+# Set PYTHONPATH to parent dir (repo root) when executing from inside the package folder
+PYTHONPATH=.. python -m eu5_agent.cli --query "How do estates work?"
 ```
 
 - For a better developer experience, install the package in editable mode so you can run `eu5-agent` directly and avoid module discovery issues:
