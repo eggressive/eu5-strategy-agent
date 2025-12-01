@@ -72,8 +72,8 @@ class TestOpenAIChatCompletion:
         # assert non-empty content.
         finish_reason = response.choices[0].finish_reason
         if finish_reason == "length":
-            # Truncated: content may be empty
-            assert True
+            # Truncated: content may be empty; nothing further to assert here
+            pass
         else:
             assert response.choices[0].message.content, "Response content should not be empty"
             assert (
