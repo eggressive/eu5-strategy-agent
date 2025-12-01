@@ -160,7 +160,11 @@ class EU5Knowledge:
                 "error": f"Knowledge file not found: {filename}"
             }
         # Use caching to avoid repeated disk reads
-        cache_key = f"knowledge:{category}:{subcategory}"
+        # Use knowledge path in cache key to avoid stale cache when multiple
+        # knowledge bases are used in a single process (e.g., tests or dynamic
+        # loading of content). We normalize the path for consistency.
+        resolved_path = str(self.knowledge_path.resolve())
+        cache_key = f"knowledge:{resolved_path}:{category}:{subcategory}"
         cached = knowledge_cache.get(cache_key)
         if cached is not None:
             return cached

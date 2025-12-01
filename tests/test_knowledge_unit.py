@@ -151,6 +151,34 @@ class TestKnowledgeRetrieval:
         assert "mechanics/economy_mechanics.md" in result1["file"]
         assert result1["size"] > 0
 
+    def test_get_knowledge_path_sensitive_cache(self, temp_knowledge_base, tmp_path):
+        """Ensure cache keys include knowledge path so switching bases doesn't return stale data."""
+        clear_all_caches()
+
+        # Path A: default temp_knowledge_base
+        kb_a = EU5Knowledge(str(temp_knowledge_base))
+        res_a1 = kb_a.get_knowledge("mechanics", "economy")
+        assert res_a1["status"] == "success"
+        assert "Economy Mechanics" in res_a1["content"]
+
+        # Create a copy for path B with a modified economy file
+        alt_base = tmp_path / "alt_knowledge"
+        alt_mechanics = alt_base / "mechanics"
+        alt_mechanics.mkdir(parents=True, exist_ok=True)
+
+        # Copy other files minimally by writing a different economy file
+        (alt_mechanics / "economy_mechanics.md").write_text("# Economy Mechanics - ALT\nAlt content")
+
+        kb_b = EU5Knowledge(str(alt_base))
+        res_b1 = kb_b.get_knowledge("mechanics", "economy")
+        assert res_b1["status"] == "success"
+        assert "ALT" in res_b1["content"], "Expected alternate knowledge content to be returned for path B"
+
+        # Re-query path A and ensure we still get the original content (not ALT)
+        res_a2 = kb_a.get_knowledge("mechanics", "economy")
+        assert res_a2["status"] == "success"
+        assert "ALT" not in res_a2["content"], "Path A should not be affected by cache from path B"
+
     def test_get_knowledge_mechanics_society(self, temp_knowledge_base):
         """Test retrieving society mechanics."""
         kb = EU5Knowledge(str(temp_knowledge_base))
