@@ -156,6 +156,8 @@ class TestOpenAIToolCalling:
             }
         ]
 
+        from openai import BadRequestError
+
         # Increase token budget to reduce chance of 400 due to output limits
         try:
             response = openai_client.chat.completions.create(
@@ -166,7 +168,6 @@ class TestOpenAIToolCalling:
                 max_completion_tokens=200,
             )
         except Exception as e:
-            from openai import BadRequestError
 
             # If the server returns a BadRequest specifically related to token
             # limits, accept that as a valid negative outcome and log it.
