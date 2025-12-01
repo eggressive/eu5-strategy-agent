@@ -188,7 +188,38 @@ Environment Variables:
         help="OpenAI model to use (default: gpt-5-mini)"
     )
 
+    parser.add_argument(
+        "--cache-stats",
+        action="store_true",
+        help="Dump in-memory cache statistics (knowledge/search) and exit",
+    )
+
     args = parser.parse_args()
+
+    # If the user just wants cache stats, show them and exit early.
+    if args.cache_stats:
+        try:
+            from .cache import knowledge_cache, search_cache
+        except Exception:  # pragma: no cover - defensive import
+            console.print("[bold red]Unable to import cache module.[/bold red]")
+            sys.exit(1)
+
+        ks = knowledge_cache.stats()
+        ss = search_cache.stats()
+        from rich.table import Table
+
+        table = Table(title="EU5 CLI Cache Stats")
+        table.add_column("Cache", style="cyan", no_wrap=True)
+        table.add_column("Size", justify="right")
+        table.add_column("MaxSize", justify="right")
+        table.add_column("Hits", justify="right")
+        table.add_column("Misses", justify="right")
+
+        table.add_row("knowledge", str(ks.get("size", 0)), str(ks.get("maxsize", 0)), str(ks.get("hits", 0)), str(ks.get("misses", 0)))
+        table.add_row("search", str(ss.get("size", 0)), str(ss.get("maxsize", 0)), str(ss.get("hits", 0)), str(ss.get("misses", 0)))
+
+        console.print(table)
+        sys.exit(0)
 
     # Configure logging if verbose mode is enabled
     if args.verbose:
