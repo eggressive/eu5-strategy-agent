@@ -224,6 +224,26 @@ When adding new integration tests:
 4. Add skip behavior when API key is missing
 5. Document expected behavior in docstrings
 6. Consider cost impact (prefer single-turn interactions)
+7. Test Isolation & Caching
+
+   Integration tests rely on a clean test environment and caches are cleared
+   between tests via a pytest fixture. The repository provides `clear_all_caches()` in
+   `eu5_agent.cache` for use in tests and debugging. When writing tests that depend
+   on knowledge files or web search behavior, ensure to clear caches to avoid
+   leaking test state across tests:
+
+   ```python
+   from eu5_agent.cache import clear_all_caches
+
+   def test_something():
+     clear_all_caches()
+     # run test
+   ```
+
+   There is an autouse fixture used in `tests/test_search_unit.py` which ensures
+   caches are cleared automatically for search-related unit tests. For
+   integration tests, prefer to call `clear_all_caches()` in the test setup when
+   necessary.
 
 Example:
 

@@ -581,6 +581,32 @@ monthly reset. The agent will continue to work with local knowledge base only.
 
 ## Troubleshooting
 
+## Caching (In-memory)
+
+This project uses a small in-memory LRU cache to reduce repeated reads of the
+local knowledge base and to avoid repeated web-search queries. The cache is
+lightweight and dependency-free (implemented in `eu5_agent.cache`).
+
+Key details:
+
+- `knowledge_cache` — LRU cache for knowledge queries (default maxsize: 256)
+- `search_cache` — LRU cache for web search and Tavily results (default maxsize: 1024)
+- `clear_all_caches()` — small helper to reset both caches (used by tests and useful for debugging)
+
+CLI integration:
+
+You can dump cache stats (size/hits/misses) using the CLI flag `--cache-stats`.
+For example:
+
+```bash
+python -m eu5_agent.cli --cache-stats
+```
+
+Notes and next steps:
+
+- The caches are in-memory only; they are not persisted to disk and do not have a TTL at the moment.
+- Use `clear_all_caches()` when loading updated knowledge files during development.
+
 ### Error: "OPENAI_API_KEY not set"
 
 **Problem:** The agent can't find your API key.
