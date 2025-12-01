@@ -14,6 +14,7 @@ from unittest.mock import Mock, patch
 import pytest
 
 from eu5_agent.knowledge import EU5Knowledge
+from eu5_agent.cache import clear_all_caches
 
 
 class TestKnowledgeInitialization:
@@ -115,10 +116,40 @@ class TestKnowledgeRetrieval:
         result = kb.get_knowledge("mechanics", "economy")
 
         assert result["status"] == "success"
+        # Verify content details
         assert "Economy Mechanics" in result["content"]
         assert result["source"] == "mechanics/economy"
         assert "mechanics/economy_mechanics.md" in result["file"]
         assert result["size"] > 0
+
+    def test_get_knowledge_caching(self, temp_knowledge_base, monkeypatch):
+        """Test that repeated calls are served from cache and avoid repeated disk reads."""
+        kb = EU5Knowledge(str(temp_knowledge_base))
+        clear_all_caches()
+
+        # Count number of times the file is opened for 'mechanics/economy_mechanics.md'
+        orig_open = open
+        calls = {"count": 0}
+
+        def counting_open(file, *args, **kwargs):
+            if str(temp_knowledge_base / "mechanics" / "economy_mechanics.md") in str(file):
+                calls["count"] += 1
+            return orig_open(file, *args, **kwargs)
+
+        monkeypatch.setattr("builtins.open", counting_open)
+
+        # First call should read the file
+        result1 = kb.get_knowledge("mechanics", "economy")
+        assert result1["status"] == "success"
+        # Second call should be served from cache and not read the file again
+        result2 = kb.get_knowledge("mechanics", "economy")
+        assert result2["status"] == "success"
+
+        assert calls["count"] == 1, "File should have been opened only once due to caching"
+        assert "Economy Mechanics" in result1["content"]
+        assert result1["source"] == "mechanics/economy"
+        assert "mechanics/economy_mechanics.md" in result1["file"]
+        assert result1["size"] > 0
 
     def test_get_knowledge_mechanics_society(self, temp_knowledge_base):
         """Test retrieving society mechanics."""

@@ -23,6 +23,7 @@ import os
 import sys
 import warnings
 from typing import List, Dict, Optional, Any
+from .cache import search_cache
 
 # Public API
 __all__ = ['search_eu5_wiki', 'search_eu5_wiki_comprehensive']
@@ -79,6 +80,11 @@ def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = N
 
     # Ensure query includes EU5 context
     query = _ensure_eu5_context(query)
+    # Build cache key - do not include full API key to avoid storing secrets
+    cache_key = f"search:{query}:{max_results}"
+    cached = search_cache.get(cache_key)
+    if cached is not None:
+        return cached
 
     try:
         from tavily import TavilyClient
@@ -110,6 +116,8 @@ def search_eu5_wiki(query: str, max_results: int = 3, api_key: Optional[str] = N
                 "snippet": snippet
             })
 
+        # Store in cache for faster repeated queries
+        search_cache.set(cache_key, results)
         return results
 
     except ImportError:
@@ -161,6 +169,10 @@ def search_eu5_wiki_comprehensive(query: str, max_results: int = 5, api_key: Opt
 
     # Ensure query includes EU5 context
     query = _ensure_eu5_context(query)
+    cache_key = f"search_comp:{query}:{max_results}"
+    cached = search_cache.get(cache_key)
+    if cached is not None:
+        return cached
 
     try:
         from tavily import TavilyClient
@@ -196,6 +208,8 @@ def search_eu5_wiki_comprehensive(query: str, max_results: int = 5, api_key: Opt
         # Sort by relevance score (highest first)
         results.sort(key=lambda x: x["score"], reverse=True)
 
+        # Store in cache
+        search_cache.set(cache_key, results)
         return results
 
     except ImportError:
