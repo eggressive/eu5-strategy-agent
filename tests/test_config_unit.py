@@ -168,6 +168,18 @@ class TestConfigValidation:
         assert error is not None
         assert "Knowledge base not found" in error
 
+    def test_validate_auto_detect_packaged_knowledge(self, monkeypatch, clean_env):
+        """Test validation succeeds when EU5_KNOWLEDGE_PATH is unset and packaged knowledge exists."""
+        # Ensure API key exists and remove any EU5_KNOWLEDGE_PATH
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.delenv("EU5_KNOWLEDGE_PATH", raising=False)
+
+        config = EU5Config()
+        is_valid, error = config.validate()
+
+        assert is_valid is True
+        assert error is None
+
     def test_validate_with_valid_config(self, monkeypatch, temp_knowledge_base):
         """Test validation succeeds with valid configuration."""
         monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")

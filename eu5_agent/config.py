@@ -91,19 +91,35 @@ class EU5Config:
                 "  OPENAI_API_KEY=your-key-here"
             )
 
+        # If a knowledge path wasn't explicitly configured, attempt to
+        # auto-detect the packaged knowledge base that lives inside the
+        # package (EU5Knowledge handles package-relative resolution). If
+        # auto-detection succeeds, consider configuration valid.
         if self.knowledge_path is None:
-            return False, (
-                "Knowledge base path not configured.\n"
-                "Set EU5_KNOWLEDGE_PATH environment variable or ensure\n"
-                "knowledge base exists in the default location."
-            )
+            try:
+                # Import here to avoid importing EU5Knowledge at module import
+                # time and to keep dependencies minimal during simple config
+                # checks. If packaged knowledge is missing, EU5Knowledge will
+                # raise FileNotFoundError which we convert to a validation
+                # error message.
+                from .knowledge import EU5Knowledge
 
-        knowledge_path = Path(self.knowledge_path)
-        if not knowledge_path.exists():
-            return False, (
-                f"Knowledge base not found at: {self.knowledge_path}\n"
-                f"Set EU5_KNOWLEDGE_PATH to correct location."
-            )
+                # Attempt to construct (this triggers auto-detection). No
+                # need to use the instance afterward.
+                EU5Knowledge()
+            except FileNotFoundError:
+                return False, (
+                    "Knowledge base could not be detected locally.\n"
+                    "Set EU5_KNOWLEDGE_PATH environment variable or ensure\n"
+                    "the packaged knowledge files exist in the package's 'knowledge/' directory."
+                )
+        else:
+            knowledge_path = Path(self.knowledge_path)
+            if not knowledge_path.exists():
+                return False, (
+                    f"Knowledge base not found at: {self.knowledge_path}\n"
+                    f"Set EU5_KNOWLEDGE_PATH to correct location."
+                )
 
         return True, None
 
