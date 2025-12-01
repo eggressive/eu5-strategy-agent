@@ -579,8 +579,6 @@ pip install tavily-python
 If you exceed 1000 searches/month, web search will stop working until the
 monthly reset. The agent will continue to work with local knowledge base only.
 
-## Troubleshooting
-
 ## Caching (In-memory)
 
 This project uses a small in-memory LRU cache to reduce repeated reads of the
@@ -606,6 +604,23 @@ Notes and next steps:
 
 - The caches are in-memory only; they are not persisted to disk and do not have a TTL at the moment.
 - Use `clear_all_caches()` when loading updated knowledge files during development.
+
+### Thread-safety & Production Guidance
+
+The in-memory `LRUCache` implementation included here is protected with a
+`threading.RLock`, which means it is safe to use from multiple threads within the
+same Python process. This prevents race conditions when multiple threads access
+`get`, `set`, `clear`, or `stats` concurrently. However, this cache is still
+process-local — it is not shared across multiple worker processes or machines.
+
+For production environments where you need cross-process sharing, persistence,
+or high concurrency, consider using a dedicated cache backend such as Redis,
+memcached, or a disk-backed cache (e.g., SQLite). These backends provide
+reliable, cross-process cache semantics and often include TTL, persistence, and
+monitoring features. The in-memory cache is primarily intended for unit tests,
+local development, or simple deployments.
+
+## Troubleshooting
 
 ### Error: "OPENAI_API_KEY not set"
 
