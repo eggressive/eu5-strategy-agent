@@ -201,14 +201,18 @@ class EU5Agent:
             iteration += 1
 
             # Call OpenAI API
-            # Note: gpt-5-mini requires max_completion_tokens (not max_tokens)
-            # and doesn't support temperature parameter (uses default=1)
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=self.messages,
-                tools=TOOLS,
-                tool_choice="auto"
-            )
+            # Build params conditionally based on model capabilities
+            api_params = {
+                "model": self.model,
+                "messages": self.messages,
+                "tools": TOOLS,
+                "tool_choice": "auto",
+            }
+            if self.config.uses_max_completion_tokens:
+                api_params["max_completion_tokens"] = 4096
+            if self.config.supports_temperature:
+                api_params["temperature"] = 0.7
+            response = self.client.chat.completions.create(**api_params)
 
             assistant_message = response.choices[0].message
 
