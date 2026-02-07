@@ -73,6 +73,7 @@ class EU5Agent:
 
         # Store config reference for model-specific behavior
         self.config = config
+        self.max_history_messages = config.max_history_messages
 
         # Initialize message history with proper OpenAI types
         self.messages: List[ChatCompletionMessageParam] = []
@@ -83,6 +84,52 @@ class EU5Agent:
         self.messages = [
             cast(ChatCompletionMessageParam, {"role": "system", "content": SYSTEM_PROMPT})
         ]
+
+    def _trim_messages(self):
+        """Trim conversation history to stay within max_history_messages.
+
+        Removes complete turn groups (a user message plus all subsequent
+        assistant/tool messages until the next user message) from the oldest
+        end of the history.  The system prompt at index 0 and the most recent
+        turn group are never dropped.
+        """
+        if len(self.messages) <= self.max_history_messages:
+            return
+
+        # Find turn-group boundaries: indices where role == "user"
+        user_indices = [
+            i for i, m in enumerate(self.messages) if m.get("role") == "user"
+        ]
+
+        if len(user_indices) <= 1:
+            # Only one turn group (or none) — nothing safe to drop
+            return
+
+        # Try dropping oldest turn groups until we're within the limit.
+        # Never drop the last turn group (the current question).
+        for cut in range(1, len(user_indices)):
+            # Keep system prompt + everything from user_indices[cut] onward
+            remaining = [self.messages[0]] + self.messages[user_indices[cut]:]
+            if len(remaining) <= self.max_history_messages:
+                dropped = len(self.messages) - len(remaining)
+                self.messages = remaining
+                logger.warning(
+                    "Trimmed %d old messages to stay within history limit (%d)",
+                    dropped,
+                    self.max_history_messages,
+                )
+                return
+
+        # Even dropping all but the last turn group isn't enough — do it anyway
+        # to avoid unbounded growth.
+        remaining = [self.messages[0]] + self.messages[user_indices[-1]:]
+        dropped = len(self.messages) - len(remaining)
+        self.messages = remaining
+        logger.warning(
+            "Trimmed %d old messages to stay within history limit (%d)",
+            dropped,
+            self.max_history_messages,
+        )
 
     def _query_knowledge(self, category: str, subcategory: Optional[str] = None) -> str:
         """
@@ -199,6 +246,9 @@ class EU5Agent:
 
         while iteration < max_iterations:
             iteration += 1
+
+            # Trim history before each API call to stay within limits
+            self._trim_messages()
 
             # Call OpenAI API
             # Build params conditionally based on the effective model

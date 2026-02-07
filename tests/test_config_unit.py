@@ -151,6 +151,23 @@ class TestModelSpecificSettings:
         config = EU5Config()
         assert config.temperature == 0.7
 
+    def test_max_history_messages_default(self, clean_env):
+        """Test that max_history_messages defaults to 100."""
+        config = EU5Config()
+        assert config.max_history_messages == 100
+
+    def test_max_history_messages_from_env(self, monkeypatch):
+        """Test that max_history_messages reads from EU5_MAX_HISTORY_MESSAGES."""
+        monkeypatch.setenv("EU5_MAX_HISTORY_MESSAGES", "50")
+        config = EU5Config()
+        assert config.max_history_messages == 50
+
+    def test_max_history_messages_invalid_env_uses_default(self, monkeypatch):
+        """Test that invalid EU5_MAX_HISTORY_MESSAGES falls back to default."""
+        monkeypatch.setenv("EU5_MAX_HISTORY_MESSAGES", "not-a-number")
+        config = EU5Config()
+        assert config.max_history_messages == 100
+
 
 class TestConfigValidation:
     """Tests for configuration validation."""

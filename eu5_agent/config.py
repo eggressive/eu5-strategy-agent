@@ -83,6 +83,11 @@ class EU5Config:
             os.getenv("OPENAI_MAX_COMPLETION_TOKENS"), default=4096
         )
 
+        # Conversation history limit (prevents unbounded growth)
+        self.max_history_messages = _parse_int(
+            os.getenv("EU5_MAX_HISTORY_MESSAGES"), default=100
+        )
+
     @staticmethod
     def supports_temperature(model: str) -> bool:
         """Check if the model supports temperature parameter."""
@@ -170,6 +175,7 @@ class EU5Config:
             f"  tavily_api_key={tavily_status}\n"
             f"  temperature={self.temperature}\n"
             f"  max_completion_tokens={self.max_completion_tokens}\n"
+            f"  max_history_messages={self.max_history_messages}\n"
             f")"
         )
 

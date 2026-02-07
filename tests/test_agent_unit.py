@@ -11,9 +11,12 @@ Tests cover:
 """
 
 import json
+import logging
+from typing import cast
 from unittest.mock import Mock, patch
 
 import pytest
+from openai.types.chat import ChatCompletionMessageParam
 
 from eu5_agent.agent import EU5Agent
 from eu5_agent.config import EU5Config
@@ -467,7 +470,9 @@ class TestAgentIntegration:
         assert response == "Test answer"
         assert len(agent.messages) > 1  # System + user + assistant
 
-    def test_multiple_conversations(self, temp_knowledge_base, monkeypatch, mock_openai_response):
+    def test_multiple_conversations(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
         """Test multiple conversations with the same agent."""
         monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
         monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
@@ -509,3 +514,171 @@ class TestAgentIntegration:
         agent.chat("Question 2")
         # Should only have system + user + assistant
         assert len(agent.messages) == 3
+
+
+def _make_agent(temp_knowledge_base, monkeypatch, max_history=10):
+    """Helper: create an EU5Agent with a configurable max_history_messages."""
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+    monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+    agent = EU5Agent()
+    agent.max_history_messages = max_history
+    return agent
+
+
+def _msg(role, content="x", **extra):
+    """Shorthand for building a message dict."""
+    m = {"role": role, "content": content}
+    m.update(extra)
+    return cast(ChatCompletionMessageParam, m)
+
+
+class TestMessageTrimming:
+    """Tests for _trim_messages() turn-group-based history trimming."""
+
+    def test_no_op_when_under_limit(self, temp_knowledge_base, monkeypatch):
+        """No trimming occurs when message count is within the limit."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=20)
+        # system + user + assistant = 3 messages, well under 20
+        agent.messages = [
+            _msg("system", "sys"),
+            _msg("user", "q1"),
+            _msg("assistant", "a1"),
+        ]
+
+        agent._trim_messages()
+
+        assert len(agent.messages) == 3
+
+    def test_drops_oldest_turn_group(self, temp_knowledge_base, monkeypatch):
+        """Oldest turn group is dropped when over the limit."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=5)
+        agent.messages = [
+            _msg("system", "sys"),       # 0
+            _msg("user", "q1"),          # 1  ← oldest turn group
+            _msg("assistant", "a1"),     # 2
+            _msg("user", "q2"),          # 3  ← second turn group
+            _msg("assistant", "a2"),     # 4
+            _msg("user", "q3"),          # 5  ← current turn group
+            _msg("assistant", "a3"),     # 6
+        ]  # total 7 > limit 5
+
+        agent._trim_messages()
+
+        # Should have dropped q1+a1, keeping system + q2+a2 + q3+a3 = 5
+        assert len(agent.messages) == 5
+        assert agent.messages[0]["role"] == "system"
+        assert agent.messages[1]["content"] == "q2"
+
+    def test_preserves_tool_call_chains(self, temp_knowledge_base, monkeypatch):
+        """Assistant tool_calls and subsequent tool results are kept together."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=8)
+        agent.messages = [
+            _msg("system", "sys"),
+            # Turn group 1: user + assistant(tool_call) + tool + assistant
+            _msg("user", "q1"),
+            _msg("assistant", "tc1", tool_calls=[{"id": "c1"}]),
+            _msg("tool", "result1", tool_call_id="c1"),
+            _msg("assistant", "a1"),
+            # Turn group 2: user + assistant(tool_call) + tool + assistant
+            _msg("user", "q2"),
+            _msg("assistant", "tc2", tool_calls=[{"id": "c2"}]),
+            _msg("tool", "result2", tool_call_id="c2"),
+            _msg("assistant", "a2"),
+        ]  # total 9 > limit 8
+
+        agent._trim_messages()
+
+        # Should have dropped turn group 1 entirely
+        assert len(agent.messages) == 5  # system + 4 messages in group 2
+        assert agent.messages[0]["role"] == "system"
+        assert agent.messages[1]["content"] == "q2"
+        # Tool chain intact
+        assert agent.messages[2]["content"] == "tc2"
+        assert agent.messages[3]["role"] == "tool"
+        assert agent.messages[4]["content"] == "a2"
+
+    def test_system_prompt_always_preserved(self, temp_knowledge_base, monkeypatch):
+        """System prompt at index 0 is never removed."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=3)
+        agent.messages = [
+            _msg("system", "sys"),
+            _msg("user", "q1"),
+            _msg("assistant", "a1"),
+            _msg("user", "q2"),
+            _msg("assistant", "a2"),
+        ]
+
+        agent._trim_messages()
+
+        assert agent.messages[0]["role"] == "system"
+        assert agent.messages[0]["content"] == "sys"
+
+    def test_never_drops_last_turn_group(self, temp_knowledge_base, monkeypatch):
+        """The most recent turn group is never dropped, even if over limit."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=2)
+        # Even with limit=2, we can't drop the only user turn group
+        agent.messages = [
+            _msg("system", "sys"),
+            _msg("user", "q1"),
+            _msg("assistant", "a1"),
+        ]  # 3 > 2, but only one turn group
+
+        agent._trim_messages()
+
+        # Nothing dropped — can't remove the only turn group
+        assert len(agent.messages) == 3
+        assert agent.messages[1]["content"] == "q1"
+
+    def test_drops_multiple_groups_when_needed(self, temp_knowledge_base, monkeypatch):
+        """Multiple old turn groups are dropped to get under the limit."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=4)
+        agent.messages = [
+            _msg("system", "sys"),
+            _msg("user", "q1"),
+            _msg("assistant", "a1"),
+            _msg("user", "q2"),
+            _msg("assistant", "a2"),
+            _msg("user", "q3"),
+            _msg("assistant", "a3"),
+            _msg("user", "q4"),
+            _msg("assistant", "a4"),
+        ]  # 9 messages, limit 4
+
+        agent._trim_messages()
+
+        # Should keep system + last turn group(s) that fit within 4
+        assert len(agent.messages) <= 4
+        assert agent.messages[0]["role"] == "system"
+        # Last turn group must survive
+        assert any(m["content"] == "q4" for m in agent.messages)
+
+    def test_logs_warning_on_trim(self, temp_knowledge_base, monkeypatch, caplog):
+        """A warning is logged when messages are trimmed."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=4)
+        agent.messages = [
+            _msg("system", "sys"),
+            _msg("user", "q1"),
+            _msg("assistant", "a1"),
+            _msg("user", "q2"),
+            _msg("assistant", "a2"),
+        ]  # 5 > 4
+
+        with caplog.at_level(logging.WARNING, logger="eu5_agent.agent"):
+            agent._trim_messages()
+
+        assert "Trimmed" in caplog.text
+        assert "old messages" in caplog.text
+
+    def test_trim_called_during_chat(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """_trim_messages() is invoked inside chat()."""
+        agent = _make_agent(temp_knowledge_base, monkeypatch, max_history=100)
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("reply")
+        )
+
+        with patch.object(agent, "_trim_messages", wraps=agent._trim_messages) as spy:
+            agent.chat("hello")
+            assert spy.call_count >= 1
