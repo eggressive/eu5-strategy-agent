@@ -303,6 +303,91 @@ class TestChatFunctionality:
         assert True  # Test passes if no exception
 
 
+class TestModelSpecificAPIParams:
+    """Tests for conditional API parameters based on model capabilities."""
+
+    def test_gpt5_sends_max_completion_tokens_not_temperature(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """Test that gpt-5 model sends max_completion_tokens but not temperature."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent(model="gpt-5-mini")
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        agent.chat("test")
+
+        call_kwargs = agent.client.chat.completions.create.call_args
+        assert "max_completion_tokens" in call_kwargs.kwargs or "max_completion_tokens" in (call_kwargs[1] if len(call_kwargs) > 1 else {})
+        # gpt-5 should NOT get temperature
+        all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
+        assert "temperature" not in all_args
+
+    def test_gpt4_sends_temperature_not_max_completion_tokens(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """Test that gpt-4 model sends temperature but not max_completion_tokens."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent(model="gpt-4o")
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        agent.chat("test")
+
+        call_kwargs = agent.client.chat.completions.create.call_args
+        all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
+        assert "temperature" in all_args
+        assert all_args["temperature"] == 0.7
+        assert "max_completion_tokens" not in all_args
+
+    def test_model_override_uses_effective_model_not_config(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """Test that model override via constructor determines API params, not config."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("OPENAI_MODEL", "gpt-5-mini")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        # Override to gpt-4o — should send temperature, not max_completion_tokens
+        agent = EU5Agent(model="gpt-4o")
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        agent.chat("test")
+
+        call_kwargs = agent.client.chat.completions.create.call_args
+        all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
+        assert "temperature" in all_args
+        assert "max_completion_tokens" not in all_args
+
+    def test_configurable_temperature_value(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """Test that custom temperature from env is passed to the API."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
+        monkeypatch.setenv("OPENAI_TEMPERATURE", "0.3")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent()
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        agent.chat("test")
+
+        call_kwargs = agent.client.chat.completions.create.call_args
+        all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
+        assert all_args["temperature"] == 0.3
+
+
 class TestErrorHandling:
     """Tests for error handling in agent."""
 

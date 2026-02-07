@@ -14,6 +14,26 @@ from pathlib import Path
 from typing import Optional
 
 
+def _parse_float(value: Optional[str], default: float) -> float:
+    """Parse an env var as float, returning default on failure."""
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except ValueError:
+        return default
+
+
+def _parse_int(value: Optional[str], default: int) -> int:
+    """Parse an env var as int, returning default on failure."""
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+
 def load_dotenv_if_present():
     """Load .env file if it exists (using python-dotenv if available)."""
     try:
@@ -57,22 +77,25 @@ class EU5Config:
         # Tavily provides AI-optimized search when knowledge base is insufficient
         self.tavily_api_key = os.getenv("TAVILY_API_KEY")
 
-        # Model-specific settings
-        # Note: gpt-5-mini doesn't support temperature parameter
-        self.supports_temperature = self._check_temperature_support()
-        self.uses_max_completion_tokens = self._check_max_completion_tokens()
+        # Configurable API parameters with sensible defaults
+        self.temperature = _parse_float(os.getenv("OPENAI_TEMPERATURE"), default=0.7)
+        self.max_completion_tokens = _parse_int(
+            os.getenv("OPENAI_MAX_COMPLETION_TOKENS"), default=4096
+        )
 
-    def _check_temperature_support(self) -> bool:
+    @staticmethod
+    def supports_temperature(model: str) -> bool:
         """Check if the model supports temperature parameter."""
         # gpt-5 models don't support temperature (only default=1)
-        if self.model and "gpt-5" in self.model:
+        if model and "gpt-5" in model:
             return False
         return True
 
-    def _check_max_completion_tokens(self) -> bool:
+    @staticmethod
+    def uses_max_completion_tokens(model: str) -> bool:
         """Check if model uses max_completion_tokens instead of max_tokens."""
         # gpt-5 models use max_completion_tokens
-        if self.model and "gpt-5" in self.model:
+        if model and "gpt-5" in model:
             return True
         return False
 
@@ -145,8 +168,8 @@ class EU5Config:
             f"  api_key={masked_key}\n"
             f"  knowledge_path={self.knowledge_path}\n"
             f"  tavily_api_key={tavily_status}\n"
-            f"  supports_temperature={self.supports_temperature}\n"
-            f"  uses_max_completion_tokens={self.uses_max_completion_tokens}\n"
+            f"  temperature={self.temperature}\n"
+            f"  max_completion_tokens={self.max_completion_tokens}\n"
             f")"
         )
 
