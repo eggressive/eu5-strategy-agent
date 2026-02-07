@@ -201,17 +201,17 @@ class EU5Agent:
             iteration += 1
 
             # Call OpenAI API
-            # Build params conditionally based on model capabilities
-            api_params = {
+            # Build params conditionally based on the effective model
+            api_params: dict = {
                 "model": self.model,
                 "messages": self.messages,
                 "tools": TOOLS,
                 "tool_choice": "auto",
             }
-            if self.config.uses_max_completion_tokens:
-                api_params["max_completion_tokens"] = 4096
-            if self.config.supports_temperature:
-                api_params["temperature"] = 0.7
+            if EU5Config.uses_max_completion_tokens(self.model):
+                api_params["max_completion_tokens"] = self.config.max_completion_tokens
+            if EU5Config.supports_temperature(self.model):
+                api_params["temperature"] = self.config.temperature
             response = self.client.chat.completions.create(**api_params)
 
             assistant_message = response.choices[0].message

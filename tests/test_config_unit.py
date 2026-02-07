@@ -112,36 +112,44 @@ class TestEU5Config:
 class TestModelSpecificSettings:
     """Tests for model-specific configuration settings."""
 
-    def test_gpt5_model_temperature_support(self, monkeypatch):
+    def test_gpt5_model_temperature_support(self):
         """Test that gpt-5 models don't support temperature."""
-        monkeypatch.setenv("OPENAI_MODEL", "gpt-5-mini")
-        config = EU5Config()
-        assert config.supports_temperature is False
+        assert EU5Config.supports_temperature("gpt-5-mini") is False
 
-    def test_gpt4_model_temperature_support(self, monkeypatch):
+    def test_gpt4_model_temperature_support(self):
         """Test that gpt-4 models support temperature."""
-        monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
-        config = EU5Config()
-        assert config.supports_temperature is True
+        assert EU5Config.supports_temperature("gpt-4o") is True
 
-    def test_gpt5_uses_max_completion_tokens(self, monkeypatch):
+    def test_gpt5_uses_max_completion_tokens(self):
         """Test that gpt-5 models use max_completion_tokens."""
-        monkeypatch.setenv("OPENAI_MODEL", "gpt-5-mini")
-        config = EU5Config()
-        assert config.uses_max_completion_tokens is True
+        assert EU5Config.uses_max_completion_tokens("gpt-5-mini") is True
 
-    def test_gpt4_uses_max_tokens(self, monkeypatch):
+    def test_gpt4_uses_max_tokens(self):
         """Test that gpt-4 models don't use max_completion_tokens."""
-        monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
-        config = EU5Config()
-        assert config.uses_max_completion_tokens is False
+        assert EU5Config.uses_max_completion_tokens("gpt-4o") is False
 
-    def test_generic_model_defaults(self, monkeypatch):
+    def test_generic_model_defaults(self):
         """Test defaults for non-GPT-5 models."""
-        monkeypatch.setenv("OPENAI_MODEL", "some-other-model")
+        assert EU5Config.supports_temperature("some-other-model") is True
+        assert EU5Config.uses_max_completion_tokens("some-other-model") is False
+
+    def test_configurable_temperature(self, monkeypatch):
+        """Test that temperature can be set via environment variable."""
+        monkeypatch.setenv("OPENAI_TEMPERATURE", "0.3")
         config = EU5Config()
-        assert config.supports_temperature is True
-        assert config.uses_max_completion_tokens is False
+        assert config.temperature == 0.3
+
+    def test_configurable_max_completion_tokens(self, monkeypatch):
+        """Test that max_completion_tokens can be set via environment variable."""
+        monkeypatch.setenv("OPENAI_MAX_COMPLETION_TOKENS", "2048")
+        config = EU5Config()
+        assert config.max_completion_tokens == 2048
+
+    def test_invalid_temperature_env_uses_default(self, monkeypatch):
+        """Test that invalid temperature env var falls back to default."""
+        monkeypatch.setenv("OPENAI_TEMPERATURE", "not-a-number")
+        config = EU5Config()
+        assert config.temperature == 0.7
 
 
 class TestConfigValidation:
@@ -302,9 +310,9 @@ class TestConfigIntegration:
         assert config.knowledge_path == str(temp_knowledge_base)
         assert config.tavily_api_key == "tvly-integration-test"
 
-        # Verify model settings
-        assert config.supports_temperature is False
-        assert config.uses_max_completion_tokens is True
+        # Verify model-specific checks use the config's model
+        assert EU5Config.supports_temperature(config.model) is False
+        assert EU5Config.uses_max_completion_tokens(config.model) is True
 
         # Verify validation
         is_valid, error = config.validate()
