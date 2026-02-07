@@ -96,6 +96,7 @@ mypy eu5_agent/
    - Coordinates tool execution (knowledge base queries, web search)
    - Handles conversation state and message history
    - Implements agentic loop with max 10 iterations to prevent infinite loops
+   - `_trim_messages()` bounds history by dropping complete turn groups from the oldest end
 
 2. **EU5Knowledge** (`knowledge.py`) - Knowledge base loader
    - Direct markdown file loading from `eu5_agent/knowledge/`
@@ -107,6 +108,7 @@ mypy eu5_agent/
    - Loads settings from environment variables or .env file
    - Singleton pattern with `get_config()` and `reset_config()` (for tests)
    - Model-specific handling: gpt-5 models use `max_completion_tokens` and don't support `temperature`
+   - `max_history_messages` (env `EU5_MAX_HISTORY_MESSAGES`, default 100) — caps conversation history length
 
 4. **Web Search** (`search.py`) - Tavily API integration
    - Optional fallback when knowledge base is insufficient
@@ -190,7 +192,7 @@ eu5_agent/knowledge/
 ### Configuration Hierarchy
 
 1. **Direct parameters** (highest priority) - Passed to `EU5Agent(api_key=..., model=...)`
-2. **Environment variables** - `OPENAI_API_KEY`, `OPENAI_MODEL`, `OPENAI_BASE_URL`, etc.
+2. **Environment variables** - `OPENAI_API_KEY`, `OPENAI_MODEL`, `OPENAI_BASE_URL`, `EU5_MAX_HISTORY_MESSAGES`, etc.
 3. **.env file** - Loaded via python-dotenv if present
 4. **Defaults** - `gpt-5-mini`, `https://api.openai.com/v1`
 
@@ -234,6 +236,14 @@ This is documented in README.md under "Running locally" section.
 - Tool execution uses defensive validation before calling functions
 - Invalid arguments return error strings rather than raising exceptions
 - Web search returns empty list on errors (agent handles gracefully)
+
+### Conversation History Trimming
+- `_trim_messages()` is called before each API call inside the `chat()` loop
+- A **turn group** = a `user` message + all subsequent `assistant`/`tool` messages until the next `user` message
+- Trimming drops complete turn groups from the oldest end, never breaking assistant+tool_call chains
+- System prompt (index 0) and the most recent turn group are never dropped
+- Controlled by `max_history_messages` (default 100, env `EU5_MAX_HISTORY_MESSAGES`)
+- Logs a warning when trimming occurs
 
 ### Iteration Limit
 - Agent loop has `max_iterations=10` to prevent infinite tool calling loops
