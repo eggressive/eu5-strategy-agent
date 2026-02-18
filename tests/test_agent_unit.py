@@ -696,12 +696,12 @@ class TestComplexQueryMode:
         query = "How do estates work?"
         assert EU5Agent._is_complex_query(query) is False
 
-    def test_build_query_message_adds_runtime_header_for_complex(self):
-        """Complex mode should prepend runtime guidance for the model."""
-        shaped = EU5Agent._build_query_message("Plan England opening", is_complex=True)
-        assert "[Complex Query Mode Enabled]" in shaped
-        assert "Situation Snapshot" in shaped
-        assert "User question: Plan England opening" in shaped
+    def test_complex_mode_instruction_contains_required_sections(self):
+        """Complex mode runtime guidance should include section requirements."""
+        instruction = EU5Agent._complex_mode_instruction()
+        assert "[Complex Query Mode Enabled]" in instruction
+        assert "Situation Snapshot" in instruction
+        assert "First 3 Actions" in instruction
 
     def test_chat_uses_complex_runtime_message_when_triggered(
         self, temp_knowledge_base, monkeypatch, mock_openai_response
@@ -720,5 +720,27 @@ class TestComplexQueryMode:
         call_kwargs = agent.client.chat.completions.create.call_args
         all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
         sent_messages = all_args["messages"]
-        assert isinstance(sent_messages[-2]["content"], str)
-        assert "[Complex Query Mode Enabled]" in sent_messages[-2]["content"]
+        assert isinstance(sent_messages[-1]["content"], str)
+        assert sent_messages[-1]["content"] == "I need a 15 year campaign roadmap with risks and fallback options"
+
+        # complex mode instruction should be injected as a temporary system message
+        assert isinstance(sent_messages[1]["content"], str)
+        assert sent_messages[1]["role"] == "system"
+        assert "[Complex Query Mode Enabled]" in sent_messages[1]["content"]
+
+    def test_chat_preserves_raw_user_message_in_history(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """Complex-mode instructions should not overwrite user content in history."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent()
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        raw_query = "Need a 10 year plan with contingencies and risk trade-offs"
+        agent.chat(raw_query)
+
+        assert any(m["role"] == "user" and m["content"] == raw_query for m in agent.messages)
