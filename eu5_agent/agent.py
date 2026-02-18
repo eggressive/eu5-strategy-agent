@@ -7,7 +7,7 @@ Integrates knowledge base and web search tools.
 
 import json
 import logging
-import os
+import re
 from typing import List, Optional, cast
 
 from openai import OpenAI
@@ -221,6 +221,57 @@ class EU5Agent:
         else:
             return f"Unknown tool: {function_name}"
 
+    @staticmethod
+    def _is_complex_query(user_message: str) -> bool:
+        """Heuristic to identify multi-constraint or long-horizon requests."""
+        lower = user_message.lower()
+
+        complex_signals = [
+            "long-term",
+            "long term",
+            "mid game",
+            "late game",
+            "campaign",
+            "roadmap",
+            "plan",
+            "trade-off",
+            "tradeoff",
+            "optimize",
+            "contingency",
+            "fallback",
+            "if ",
+            "risk",
+            "timeline",
+            "5 year",
+            "10 year",
+            "15 year",
+            "30 year",
+        ]
+
+        signal_count = sum(1 for s in complex_signals if s in lower)
+        separators = len(re.findall(r"\b(and|while|versus|vs\.?|with)\b", lower))
+        punctuation_split = lower.count(",") + lower.count(";")
+        long_message = len(lower.split()) >= 20
+
+        return signal_count >= 2 or separators >= 2 or punctuation_split >= 2 or long_message
+
+    @staticmethod
+    def _build_query_message(user_message: str, is_complex: bool) -> str:
+        """Attach lightweight runtime instructions for complex strategy requests."""
+        if not is_complex:
+            return user_message
+
+        complex_instructions = (
+            "[Complex Query Mode Enabled]\n"
+            "Treat this as a campaign-level planning question. "
+            "If critical context is missing, ask up to 3 clarifying questions first. "
+            "Otherwise respond with: Situation Snapshot, Objectives (Short/Mid/Long), "
+            "Phased Plan (Immediate/5-year/10+ year), Risk Matrix, Pivot Triggers, "
+            "and First 3 Actions. Include conservative and aggressive alternatives.\n\n"
+            f"User question: {user_message}"
+        )
+        return complex_instructions
+
     def chat(self, user_message: str, verbose: bool = False) -> str:
         """
         Send a message to the agent and get a response.
@@ -232,10 +283,12 @@ class EU5Agent:
         Returns:
             The agent's response
         """
-        # Add user message to history
+        # Add user message to history (with optional complex-mode instructions)
+        is_complex_query = self._is_complex_query(user_message)
+        runtime_user_message = self._build_query_message(user_message, is_complex_query)
         self.messages.append(cast(ChatCompletionMessageParam, {
             "role": "user",
-            "content": user_message
+            "content": runtime_user_message
         }))
 
         # Maximum iterations to prevent infinite loops
