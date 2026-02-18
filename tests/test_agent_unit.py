@@ -682,3 +682,43 @@ class TestMessageTrimming:
         with patch.object(agent, "_trim_messages", wraps=agent._trim_messages) as spy:
             agent.chat("hello")
             assert spy.call_count >= 1
+
+class TestComplexQueryMode:
+    """Tests for complex-query detection and runtime message shaping."""
+
+    def test_detects_complex_query_from_long_horizon_terms(self):
+        """Long-horizon strategy wording should trigger complex mode."""
+        query = "Give me a 10 year campaign plan with trade-off analysis and contingencies"
+        assert EU5Agent._is_complex_query(query) is True
+
+    def test_simple_query_does_not_trigger_complex_mode(self):
+        """Short tactical prompts should remain in normal mode."""
+        query = "How do estates work?"
+        assert EU5Agent._is_complex_query(query) is False
+
+    def test_build_query_message_adds_runtime_header_for_complex(self):
+        """Complex mode should prepend runtime guidance for the model."""
+        shaped = EU5Agent._build_query_message("Plan England opening", is_complex=True)
+        assert "[Complex Query Mode Enabled]" in shaped
+        assert "Situation Snapshot" in shaped
+        assert "User question: Plan England opening" in shaped
+
+    def test_chat_uses_complex_runtime_message_when_triggered(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """chat() should send shaped complex-mode content to the API."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent()
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        agent.chat("I need a 15 year campaign roadmap with risks and fallback options")
+
+        call_kwargs = agent.client.chat.completions.create.call_args
+        all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
+        sent_messages = all_args["messages"]
+        assert isinstance(sent_messages[-2]["content"], str)
+        assert "[Complex Query Mode Enabled]" in sent_messages[-2]["content"]
