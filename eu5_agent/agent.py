@@ -20,6 +20,15 @@ from .prompts import SYSTEM_PROMPT, TOOLS
 # Set up logger for this module
 logger = logging.getLogger(__name__)
 
+# Complex-query detection tuning constants
+_COMPLEX_SEPARATOR_PATTERN = re.compile(r"\b(and|while|versus|vs\.?|with)\b")
+_COMPLEX_STRONG_SIGNALS = {
+    "long-term", "long term", "campaign", "roadmap", "trade-off", "tradeoff",
+    "optimize", "contingency", "fallback", "timeline", "5 year", "10 year",
+    "15 year", "30 year",
+}
+_COMPLEX_WEAK_SIGNALS = {"plan", "risk", "if "}
+
 
 class EU5Agent:
     """
@@ -226,34 +235,22 @@ class EU5Agent:
         """Heuristic to identify multi-constraint or long-horizon requests."""
         lower = user_message.lower()
 
-        complex_signals = [
-            "long-term",
-            "long term",
-            "mid game",
-            "late game",
-            "campaign",
-            "roadmap",
-            "plan",
-            "trade-off",
-            "tradeoff",
-            "optimize",
-            "contingency",
-            "fallback",
-            "if ",
-            "risk",
-            "timeline",
-            "5 year",
-            "10 year",
-            "15 year",
-            "30 year",
-        ]
-
-        signal_count = sum(1 for s in complex_signals if s in lower)
-        separators = len(re.findall(r"\b(and|while|versus|vs\.?|with)\b", lower))
+        strong_signal_count = sum(1 for s in _COMPLEX_STRONG_SIGNALS if s in lower)
+        weak_signal_count = sum(1 for s in _COMPLEX_WEAK_SIGNALS if s in lower)
+        separators = len(_COMPLEX_SEPARATOR_PATTERN.findall(lower))
         punctuation_split = lower.count(",") + lower.count(";")
-        long_message = len(lower.split()) >= 20
+        long_message = len(lower.split()) >= 30
 
-        return signal_count >= 2 or separators >= 2 or punctuation_split >= 2 or long_message
+        # Avoid over-triggering from generic words like "plan" in short prompts.
+        # Treat complex mode as opt-in when there are either strong planning signals,
+        # multiple constraints, or a long query plus at least one weak planning cue.
+        score = strong_signal_count * 2 + weak_signal_count + separators + punctuation_split
+
+        if score >= 3:
+            return True
+        if long_message and (strong_signal_count > 0 or weak_signal_count > 0):
+            return True
+        return False
 
     @staticmethod
     def _complex_mode_instruction() -> str:
@@ -266,6 +263,23 @@ class EU5Agent:
             "Phased Plan (Immediate/5-year/10+ year), Risk Matrix, Pivot Triggers, "
             "and First 3 Actions. Include conservative and aggressive alternatives."
         )
+
+    def _build_request_messages(self, is_complex_query: bool) -> List[ChatCompletionMessageParam]:
+        """Build request message list, injecting complex-mode guidance when needed."""
+        request_messages: List[ChatCompletionMessageParam] = list(self.messages)
+        if not is_complex_query:
+            return request_messages
+
+        complex_mode_message = cast(ChatCompletionMessageParam, {
+            "role": "system",
+            "content": self._complex_mode_instruction(),
+        })
+
+        if request_messages and request_messages[0].get("role") == "system":
+            return [request_messages[0], complex_mode_message, *request_messages[1:]]
+
+        # Defensive fallback: if history is ever malformed, prepend instructions.
+        return [complex_mode_message, *request_messages]
 
     def chat(self, user_message: str, verbose: bool = False) -> str:
         """
@@ -299,13 +313,7 @@ class EU5Agent:
 
             # Call OpenAI API
             # Build params conditionally based on the effective model
-            request_messages: List[ChatCompletionMessageParam] = list(self.messages)
-            if is_complex_query:
-                complex_mode_message = cast(ChatCompletionMessageParam, {
-                    "role": "system",
-                    "content": self._complex_mode_instruction(),
-                })
-                request_messages = [request_messages[0], complex_mode_message, *request_messages[1:]]
+            request_messages = self._build_request_messages(is_complex_query)
 
             api_params: dict = {
                 "model": self.model,

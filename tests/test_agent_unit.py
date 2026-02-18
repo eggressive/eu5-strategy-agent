@@ -696,6 +696,19 @@ class TestComplexQueryMode:
         query = "How do estates work?"
         assert EU5Agent._is_complex_query(query) is False
 
+    def test_single_plan_keyword_does_not_trigger_complex_mode(self):
+        """A short prompt with only 'plan' should not over-trigger complex mode."""
+        query = "Plan England opening"
+        assert EU5Agent._is_complex_query(query) is False
+
+    def test_long_query_without_strategy_cues_does_not_trigger_complex_mode(self):
+        """Length alone should not trigger complex mode without planning cues."""
+        query = (
+            "Can you explain estates taxes manpower legitimacy unrest province development "
+            "and advisor effects in detail for me please"
+        )
+        assert EU5Agent._is_complex_query(query) is False
+
     def test_complex_mode_instruction_contains_required_sections(self):
         """Complex mode runtime guidance should include section requirements."""
         instruction = EU5Agent._complex_mode_instruction()
@@ -727,6 +740,28 @@ class TestComplexQueryMode:
         assert isinstance(sent_messages[1]["content"], str)
         assert sent_messages[1]["role"] == "system"
         assert "[Complex Query Mode Enabled]" in sent_messages[1]["content"]
+
+    def test_chat_does_not_inject_complex_instruction_for_simple_query(
+        self, temp_knowledge_base, monkeypatch, mock_openai_response
+    ):
+        """Simple prompts should send only the base system + raw user message."""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")
+        monkeypatch.setenv("EU5_KNOWLEDGE_PATH", str(temp_knowledge_base))
+
+        agent = EU5Agent()
+        agent.client.chat.completions.create = Mock(
+            return_value=mock_openai_response("response")
+        )
+
+        agent.chat("How do estates work?")
+
+        call_kwargs = agent.client.chat.completions.create.call_args
+        all_args = call_kwargs.kwargs if call_kwargs.kwargs else call_kwargs[1]
+        sent_messages = all_args["messages"]
+
+        assert len(sent_messages) == 2
+        assert sent_messages[0]["role"] == "system"
+        assert sent_messages[1]["role"] == "user"
 
     def test_chat_preserves_raw_user_message_in_history(
         self, temp_knowledge_base, monkeypatch, mock_openai_response
