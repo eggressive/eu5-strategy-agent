@@ -256,21 +256,16 @@ class EU5Agent:
         return signal_count >= 2 or separators >= 2 or punctuation_split >= 2 or long_message
 
     @staticmethod
-    def _build_query_message(user_message: str, is_complex: bool) -> str:
-        """Attach lightweight runtime instructions for complex strategy requests."""
-        if not is_complex:
-            return user_message
-
-        complex_instructions = (
+    def _complex_mode_instruction() -> str:
+        """Runtime instruction injected as a temporary system message."""
+        return (
             "[Complex Query Mode Enabled]\n"
             "Treat this as a campaign-level planning question. "
             "If critical context is missing, ask up to 3 clarifying questions first. "
             "Otherwise respond with: Situation Snapshot, Objectives (Short/Mid/Long), "
             "Phased Plan (Immediate/5-year/10+ year), Risk Matrix, Pivot Triggers, "
-            "and First 3 Actions. Include conservative and aggressive alternatives.\n\n"
-            f"User question: {user_message}"
+            "and First 3 Actions. Include conservative and aggressive alternatives."
         )
-        return complex_instructions
 
     def chat(self, user_message: str, verbose: bool = False) -> str:
         """
@@ -283,12 +278,11 @@ class EU5Agent:
         Returns:
             The agent's response
         """
-        # Add user message to history (with optional complex-mode instructions)
+        # Add raw user message to history
         is_complex_query = self._is_complex_query(user_message)
-        runtime_user_message = self._build_query_message(user_message, is_complex_query)
         self.messages.append(cast(ChatCompletionMessageParam, {
             "role": "user",
-            "content": runtime_user_message
+            "content": user_message
         }))
 
         # Maximum iterations to prevent infinite loops
@@ -305,9 +299,17 @@ class EU5Agent:
 
             # Call OpenAI API
             # Build params conditionally based on the effective model
+            request_messages: List[ChatCompletionMessageParam] = list(self.messages)
+            if is_complex_query:
+                complex_mode_message = cast(ChatCompletionMessageParam, {
+                    "role": "system",
+                    "content": self._complex_mode_instruction(),
+                })
+                request_messages = [request_messages[0], complex_mode_message, *request_messages[1:]]
+
             api_params: dict = {
                 "model": self.model,
-                "messages": self.messages,
+                "messages": request_messages,
                 "tools": TOOLS,
                 "tool_choice": "auto",
             }
