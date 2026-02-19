@@ -709,6 +709,14 @@ class TestComplexQueryMode:
         )
         assert EU5Agent._is_complex_query(query) is False
 
+    def test_many_separators_without_planning_signals_do_not_trigger_complex_mode(self):
+        """Conjunction-heavy prompts should not trigger by structure alone."""
+        query = (
+            "Explain estates and manpower and taxes and unrest and advisor effects, "
+            "and compare inflation and autonomy and legitimacy"
+        )
+        assert EU5Agent._is_complex_query(query) is False
+
     def test_complex_mode_instruction_contains_required_sections(self):
         """Complex mode runtime guidance should include section requirements."""
         instruction = EU5Agent._complex_mode_instruction()
