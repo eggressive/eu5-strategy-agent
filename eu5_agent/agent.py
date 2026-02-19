@@ -241,14 +241,18 @@ class EU5Agent:
         punctuation_split = lower.count(",") + lower.count(";")
         long_message = len(lower.split()) >= 30
 
-        # Avoid over-triggering from generic words like "plan" in short prompts.
-        # Treat complex mode as opt-in when there are either strong planning signals,
-        # multiple constraints, or a long query plus at least one weak planning cue.
-        score = strong_signal_count * 2 + weak_signal_count + separators + punctuation_split
+        # Avoid over-triggering from structure words/punctuation alone.
+        # We only treat separators/punctuation as boosters once at least one
+        # planning-oriented signal is present.
+        signal_score = strong_signal_count * 2 + weak_signal_count
+        structure_score = separators + punctuation_split
 
-        if score >= 3:
+        if signal_score == 0:
+            return False
+
+        if signal_score + structure_score >= 3:
             return True
-        if long_message and (strong_signal_count > 0 or weak_signal_count > 0):
+        if long_message:
             return True
         return False
 
